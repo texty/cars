@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/application.css" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,800,italic&subset=cyrillic,latin' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>Які авто реєструють в Україні?</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-7">
+            <p>Усі легально куплені автомобілі реєструють у Сервісному центрі МВС. Завдяки публікації відкритих даних МВС, ми можемо дізнатися те які автомобілі купують в Україні.</p>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <select id="inds" class="navigation" onchange="change(this.value)">
+                <option value="data/fuel_line_plot.csv" selected="selected">Види пального</option>
+                <option value="data/oblast_name_line_plot.csv">Регіони</option>
+                <option value="data/kind_line_plot.csv">Типи автомобілів</option>
+                <option value="data/make_year_line_plot.csv">Рік виробництва</option>
+            </select>
+            <button id='deleteBigLinePlot' class="navigation">Очистити графік</button>
+            <button id='helpButton' class="navigation">Help</button>
+            <button id='exportButton' class="navigation noborders" onclick="downloadData()" title="Завантажити в CSV">ЕКС</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-7">
+            <div id="bigLinePlot"></div>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <div id="legend">
+              <svg width="300px" height="400px"></svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ТИМЧАСОВО ВИМИКАЄМО ЦІ ГРАФІКИ -->
+<div id="wrapper">
+    <div id="myDiv"></div>
+      <div class="row">
+        <div class="col-8">
+          <div class="form-inline">
+            <button onclick="returnProducers()">Повернутися</button>
+            <div id="carProducerReturnTag"></div>
+        </div>
+          <div id="cloudPlot"></div>
+        </div>
+      <div class="col-4">
+        <button onclick="emptyLineChart()">Очистити графік</button>
+        <div id="smallLine">
+                <input class="typeahead" type="text" placeholder="Назва моделі">
+                <button type="button" id="buttonSmall">Шукати</button>
+        </div>
+        <div id="linePlot"></div>
+        <p>Усі легально куплені автомобілі реєструють у Сервісному центрі МВС. Завдяки публікації відкритих даних МВС, ми можемо дізнатися те які автомобілі купують в Україні. За допомогою цього інструменту ви можете самостійно перевіряти кількість зареєстрованих (а значить і проданих) автомобілів за кожною маркою та моделлю.</p>
+      </div>
+      </div>
+</div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<!--<script src="https://unpkg.com/popper.js"></script>-->
+<!--<script src="https://unpkg.com/tooltip.js"></script>-->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+
+<script src="lib/lodash.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="js/fuel_line_plot.js"></script>
+
+<!-- ТИМЧАСОВО ВИМИКАЄМО ЦІ ГРАФІКИ -->
+<script src="lib/d3.layout.cloud.js"></script>
+<script src="js/general.js"></script>
+<script src="js/cloud_plot.js"></script>
+<script src="js/line_plot.js"></script>
+<script src="js/brand_model_plot.js"></script>
+
+</body>
+</html>
