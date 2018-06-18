@@ -1,7 +1,8 @@
 data_provider.getDailyData(function(daily_data) {
-
+    console.log(daily_data);
     var total_chart = smallchart()
         .data(daily_data)
+        .varName("n")
 
         // .future(future)
         // .varName('pension_age')

@@ -5,4 +5,24 @@ body {
 p {
   font-size: 1em; }
 
+.smallchart {
+  shape-rendering: crispEdges;
+  overflow: visible; }
+  .smallchart .axis--x path {
+    /*display: none;*/ }
+  .smallchart .axis path {
+    opacity: .1;
+    stroke-width: 1;
+    display: none; }
+  .smallchart .tick line {
+    opacity: .1;
+    stroke-width: 1;
+    display: none; }
+  .smallchart .line.main {
+    fill: none;
+    stroke: #85a561; }
+  .smallchart .area.main {
+    fill-opacity: 0.8;
+    fill: #ff7f00; }
+
 /*# sourceMappingURL=application.css.map */

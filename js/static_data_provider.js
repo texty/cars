@@ -1,27 +1,19 @@
 var data_provider = (function() {
     var module = {};
     
-    var __data__;
-    var __daily_data__;
+    var __datasets__ = {};
+    
+    function retrieve(name, method, param, cb) {
+        if (__datasets__[name]) return __datasets__[name];
 
-    // var retrieveData = function(cb) {
-    //     if (__data__) cb(__data__);
-    //
-    //     d3.csv("data/main_grouped.csv", function(err, data) {
-    //         __data__ = data;
-    //         return cb(err, data);
-    //     });
-    // };
+        return method(param, function(err, data){
+            if (err) throw err;
 
-    var retrieveDailyData = function(cb) {
-        if (__daily_data__) cb(__daily_data__);
-
-        d3.csv("data/daily.csv", function(err, data) {
-            __daily_data__ = data;
-            return cb(err, data);
-        });
-    };
-
+            __datasets__[name] = data;
+            return cb(data)
+        })
+    }
+    
     // module.getCars = function(query, cb) {
     //     return retrieveData(function(err, data) {
     //         if (err) throw err;
@@ -46,14 +38,16 @@ var data_provider = (function() {
     // };
     
     module.getDailyData = function(cb) {
-        return retrieveDailyData(function(err, data) {
-            if (err) throw err;
-
-            return cb(data);
-        });
+        return retrieve("daily", d3.csv, "data/daily.csv", function(data) {
+            data.forEach(function(row){
+                row.d_reg = new Date(row.d_reg);
+                row.n = +row.n;
+            });
+            return cb(data)
+        })
     };
-
-
+    
+    
     function keyFilter(obj, key, values) {
         if (!values) return true;
         return values.indexOf(obj[key]) >=0;
