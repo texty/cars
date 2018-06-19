@@ -8,6 +8,8 @@ function list_control() {
             items: [],
             show_badges: false
         }
+        , badgeFormat
+        , ps
         ;
 
     function my(selection) {
@@ -39,7 +41,14 @@ function list_control() {
     my.render = render;
 
     function render() {
-        d3.select(container).html(template(context));
+        var cont = d3.select(container);
+        cont.html(template(context));
+
+        const list_container = cont.select("div.ul-container").node();
+        ps = new PerfectScrollbar(list_container, {
+            suppressScrollX: true
+        });
+
         return my;
     }
 
@@ -47,10 +56,9 @@ function list_control() {
     return my;
 }
 
-
-Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-    if(v1 === v2) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-});
+// Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+//     if(v1 === v2) {
+//         return options.fn(this);
+//     }
+//     return options.inverse(this);
+// });

@@ -27,7 +27,8 @@ svg.smallchart {
     fill: #ff7f00; }
 
 .list-control {
-  width: 100%; }
+  width: 100%;
+  /* to make scrollbars always visible */ }
   .list-control input.searchbox {
     width: 100%;
     box-sizing: border-box;
@@ -35,5 +36,19 @@ svg.smallchart {
     border-radius: 2px;
     padding: 12px 20px 12px 12px;
     margin-top: 20px; }
+  .list-control .list-group-item {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em; }
+    .list-control .list-group-item label.form-check-label {
+      width: 100%; }
+    .list-control .list-group-item .badge {
+      float: right; }
+  .list-control .ul-container {
+    height: 300px;
+    position: relative; }
+  .list-control .always-visible.ps > .ps__rail-y {
+    opacity: 0.6; }
+  .list-control .ps > .ps__rail-y {
+    z-index: 2; }
 
 /*# sourceMappingURL=application.css.map */
