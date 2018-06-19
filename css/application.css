@@ -5,23 +5,45 @@ body {
 p {
   font-size: 1em; }
 
-.smallchart {
+svg.smallchart {
   shape-rendering: crispEdges;
   overflow: visible; }
-  .smallchart .axis--x path {
+  svg.smallchart .axis--x path {
     /*display: none;*/ }
-  .smallchart .axis path {
+  svg.smallchart .axis path {
     opacity: .1;
     stroke-width: 1;
     display: none; }
-  .smallchart .tick line {
+  svg.smallchart .tick line {
     opacity: .1;
     stroke-width: 1;
     display: none; }
-  .smallchart .line.main {
+  svg.smallchart .line.main {
+    display: none;
     fill: none;
     stroke: #85a561; }
-  .smallchart .area.main {
+  svg.smallchart .area.main {
+    fill-opacity: 0.8;
+    fill: #ff7f00; }
+
+svg.smallchart {
+  shape-rendering: crispEdges;
+  overflow: visible; }
+  svg.smallchart .axis--x path {
+    /*display: none;*/ }
+  svg.smallchart .axis path {
+    opacity: .1;
+    stroke-width: 1;
+    display: none; }
+  svg.smallchart .tick line {
+    opacity: .1;
+    stroke-width: 1;
+    display: none; }
+  svg.smallchart .line.main {
+    display: none;
+    fill: none;
+    stroke: #85a561; }
+  svg.smallchart .area.main {
     fill-opacity: 0.8;
     fill: #ff7f00; }
 

@@ -7,7 +7,10 @@ function smallchart() {
         
         , minY
         , maxY
-        , yFormat = function(v) {return v}
+        , yFormat = (function() {
+            var base = d3.format(".0d");
+            return function(v) {return base(v).replace(/,/g, " ")}
+        })()
         , yTickValues
         , showTips
         , x
