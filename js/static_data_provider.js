@@ -14,43 +14,23 @@ var data_provider = (function() {
         })
     }
     
-    // module.getCars = function(query, cb) {
-    //     return retrieveData(function(err, data) {
-    //         if (err) throw err;
-    //
-    //         //тут у нас точно є дані
-    //         // debugger;
-    //         if (!query) return cb(data);
-    //
-    //         var queryFilter = function(obj) {
-    //             return keyFilter(obj, "producer", query.producer)
-    //                 // && keyFilter(obj, "region_code", query.region_code)
-    //                 && keyFilter(obj, "model", query.model)
-    //                 && keyFilter(obj, "make_year", query.make_year)
-    //                 && keyFilter(obj, "color", query.color)
-    //                 && keyFilter(obj, "kind", query.kind)
-    //                 && keyFilter(obj, "fuel", query.fuel)
-    //         };
-    //         debugger;
-    //         var filtered = data.filter(queryFilter);
-    //         return cb(filtered);
-    //     });
-    // };
-    
     module.getDailyData = function(cb) {
         return retrieve("daily", d3.csv, "data/daily.csv", function(data) {
-            data.forEach(function(row){
+            var filled = fillDates(data);
+
+            filled.forEach(function(row){
                 row.d_reg = new Date(row.d_reg);
                 row.n = +row.n;
             });
-            return cb(data)
+
+            return cb(filled);
         })
     };
 
     module.getProducersData = function(cb) {
         return retrieve("producers", d3.csv, "data/producers.csv", function(data) {
             data.forEach(function(row) {
-                row.n = + row.n;
+                row.n = +row.n;
             });
 
             return cb(data);
@@ -60,18 +40,41 @@ var data_provider = (function() {
     module.getRegionsData = function(cb) {
         return retrieve("regions", d3.csv, "data/regions.csv", function(data) {
             data.forEach(function(row) {
-                row.n = + row.n;
+                row.n = +row.n;
             });
 
             return cb(data);
         });
     };
 
+    function fillDates(sorted) {
+        if (sorted.length < 3) return sorted;
 
+        var extent = d3.extent(sorted, function(d){return d.d_reg});
+        var sequence = datesInRange(extent[0], extent[1]);
+        var idx = 0;
+        return sequence.map(function(date_str){
+            if (date_str === sorted[idx].d_reg) return sorted[idx++];
+            return {d_reg: date_str, n:0}
+        });
+    }
 
-    function keyFilter(obj, key, values) {
-        if (!values) return true;
-        return values.indexOf(obj[key]) >=0;
+    function addDays(date_str, n) {
+        var date = moment.utc(date_str);
+        date.add(1, 'days');
+        return date.toISOString().substr(0, 10);
+    }
+
+    function datesInRange(min_str, max_str) {
+        var date_str = min_str;
+        var result = [];
+
+        while (date_str <= max_str) {
+            result.push(date_str);
+            date_str = addDays(date_str, 1);
+        }
+
+        return result;
     }
 
     return module;
