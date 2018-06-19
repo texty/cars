@@ -34,17 +34,68 @@
 
     <div class="row">
         <div class="col-12 col-md-7">
+            <div id="regions_control">
+
+            </div>
+
+
+            <!--<div class="list-control">-->
+                <!--<input class="searchbox" type="text" name="search" placeholder="шукати"/>-->
+                <!--<ul class="list-group form-check">-->
+                    <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
+                        <!--<input type="checkbox" class="form-check-input" value="">-->
+                        <!--<span class="label">Inbox</span>-->
+                        <!--<span class="badge badge-primary badge-pill">12</span>-->
+                    <!--</li>-->
+                    <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
+                        <!--<input type="checkbox" class="form-check-input" value="">-->
+                        <!--<span class="label">Ads</span>-->
+                        <!--<span class="badge badge-primary badge-pill">50</span>-->
+                    <!--</li>-->
+                    <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
+                        <!--<input type="checkbox" class="form-check-input" value="">-->
+                        <!--<span class="label">Junk</span>-->
+                        <!--<span class="badge badge-primary badge-pill">99</span>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+
+
+
+
         </div>
 
         <div class="col-12 col-md-5">
+            <div id="producers_control">
+
+
+            </div>
         </div>
     </div>
 </div>
 
 
+<script type="text/x-handlebars-template" id="list-control-template">
+    <div class="list-control">
+        <input class="searchbox" type="text" name="search" placeholder="{{placeholder}}"/>
+        <ul class="list-group form-check">
+            {{#each items}}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <input type="checkbox" class="form-check-input" value="">
+                <span class="label">{{this.label}}</span>
+                {{#if @root.show_badges}}
+                <span class="badge badge-primary badge-pill">{{this.badge}}</span>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
 <script src="lib/d3.v4.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="lib/bootstrap.min.js"></script>
+<script src="lib/handlebars.min.js"></script>
 
 <script src="js/static_data_provider.js"></script>
 <script src="js/smallchart.js"></script>

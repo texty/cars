@@ -1,36 +1,17 @@
-$area_color: #ff7f00;
-$path_color: #85a561;
 
-svg.smallchart {
+.list-control {
+  width: 100%;
 
-  shape-rendering: crispEdges;
-  overflow: visible;
+  input.searchbox {
+    width: 100%;
 
-  .axis--x path {
-    /*display: none;*/
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+
+    //font-size: 16px;
+    //background-color: white;
+    padding: 12px 20px 12px 12px;
+    margin-top: 20px;
   }
-
-  .axis path {
-    opacity: .1;
-    stroke-width: 1;
-    display: none;
-  }
-
-  .tick line {
-    opacity: .1;
-    stroke-width: 1;
-    display: none;
-  }
-
-  .line.main {
-    display: none;
-    fill: none;
-    stroke: $path_color;
-  }
-
-  .area.main {
-    fill-opacity: 0.8;
-    fill: $area_color;
-  }
-
 }

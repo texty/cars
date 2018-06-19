@@ -26,25 +26,14 @@ svg.smallchart {
     fill-opacity: 0.8;
     fill: #ff7f00; }
 
-svg.smallchart {
-  shape-rendering: crispEdges;
-  overflow: visible; }
-  svg.smallchart .axis--x path {
-    /*display: none;*/ }
-  svg.smallchart .axis path {
-    opacity: .1;
-    stroke-width: 1;
-    display: none; }
-  svg.smallchart .tick line {
-    opacity: .1;
-    stroke-width: 1;
-    display: none; }
-  svg.smallchart .line.main {
-    display: none;
-    fill: none;
-    stroke: #85a561; }
-  svg.smallchart .area.main {
-    fill-opacity: 0.8;
-    fill: #ff7f00; }
+.list-control {
+  width: 100%; }
+  .list-control input.searchbox {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 12px 20px 12px 12px;
+    margin-top: 20px; }
 
 /*# sourceMappingURL=application.css.map */

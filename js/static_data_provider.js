@@ -46,8 +46,29 @@ var data_provider = (function() {
             return cb(data)
         })
     };
-    
-    
+
+    module.getProducersData = function(cb) {
+        return retrieve("producers", d3.csv, "data/producers.csv", function(data) {
+            data.forEach(function(row) {
+                row.n = + row.n;
+            });
+
+            return cb(data);
+        });
+    };
+
+    module.getRegionsData = function(cb) {
+        return retrieve("regions", d3.csv, "data/regions.csv", function(data) {
+            data.forEach(function(row) {
+                row.n = + row.n;
+            });
+
+            return cb(data);
+        });
+    };
+
+
+
     function keyFilter(obj, key, values) {
         if (!values) return true;
         return values.indexOf(obj[key]) >=0;
