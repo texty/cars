@@ -46,7 +46,8 @@ function list_control() {
 
         const list_container = cont.select("div.ul-container").node();
         ps = new PerfectScrollbar(list_container, {
-            suppressScrollX: true
+            suppressScrollX: true,
+            minScrollbarLength: 20
         });
 
         return my;
