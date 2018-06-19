@@ -1,3 +1,6 @@
+.hidden {
+  display: none !important;
+}
 
 .list-control {
   width: 100%;
@@ -43,5 +46,6 @@
   .ps > .ps__rail-y {
     z-index: 2;
   }
+
 
 }

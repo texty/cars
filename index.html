@@ -55,31 +55,31 @@
 </div>
 
 
-<script type="text/x-handlebars-template" id="list-control-template">
-    <div class="list-control">
-        <input class="searchbox" type="text" name="search" placeholder="{{placeholder}}"/>
-        <div class="ul-container always-visible">
-            <ul class="list-group form-check">
-                {{#each items}}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" value="">
-                        {{this.label}}
-                        {{#if @root.show_badges}}
-                        <span class="badge badge-primary badge-pill">{{this.badge}}</span>
-                        {{/if}}
-                    </label>
-                </li>
-                {{/each}}
-            </ul>
-        </div>
-    </div>
-</script>
+<!--<script type="text/x-handlebars-template" id="list-control-template">-->
+    <!--<div class="list-control">-->
+        <!--<input class="searchbox" type="text" name="search" placeholder="{{placeholder}}"/>-->
+        <!--<div class="ul-container always-visible">-->
+            <!--<ul class="list-group form-check">-->
+                <!--{{#each items}}-->
+                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
+                    <!--<label class="form-check-label">-->
+                        <!--<input type="checkbox" class="form-check-input" value="">-->
+                        <!--<span class="check-label-text">{{this.label}}</span>-->
+                        <!--{{#if @root.show_badges}}-->
+                        <!--<span class="badge badge-primary badge-pill">{{this.badge}}</span>-->
+                        <!--{{/if}}-->
+                    <!--</label>-->
+                <!--</li>-->
+                <!--{{/each}}-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
 
 <script src="lib/d3.v4.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="lib/bootstrap.min.js"></script>
-<script src="lib/handlebars.min.js"></script>
+<!--<script src="lib/handlebars.min.js"></script>-->
 <script src="lib/moment.min.js"></script>
 <script src="lib/perfect-scrollbar.min.js"></script>
 

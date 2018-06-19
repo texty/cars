@@ -26,6 +26,9 @@ svg.smallchart {
     fill-opacity: 0.8;
     fill: #ff7f00; }
 
+.hidden {
+  display: none !important; }
+
 .list-control {
   width: 100%;
   /* to make scrollbars always visible */ }
