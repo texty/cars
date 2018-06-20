@@ -1,7 +1,5 @@
 function list_control() {
 
-    // var template = Handlebars.compile($("#list-control-template").html());
-
     var container
         , context = {
             placeholder: "",
@@ -10,8 +8,9 @@ function list_control() {
         }
         , badgeFormat
         , ps
-        , filter_term = ""
-        , item
+        , filter_term = "" //todo only internal
+        , item_enter
+        , _onChange = noop
         // , ul_container
         ;
 
@@ -44,7 +43,7 @@ function list_control() {
 
             searchbox.on("change input", function(){
                 var term = normalize(this.value);
-                item.classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
+                item_enter.classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
                 
                 //todo
                 // Це фільтрування повинно бути тільки візуальним. 
@@ -56,17 +55,28 @@ function list_control() {
             update();
 
             function update() {
-                var item_selection = ul
+                var item_join_selection = ul
                     .selectAll("li.list-group-item")
-                    .data(context.items);
+                    .data(context.items, function(d) {return d.label;});
 
-                item_selection.exit().remove();
+                // UPDATE
+                // зараз це не требаЮ але може буде колись
+                // item_join_selection
+                //     .selectAll("label.form-check-label")
 
-                item = item_selection.enter() //
+                // EXIT
+                item_join_selection.exit().remove();
+
+
+                item_enter = item_join_selection.enter() //
                     .append("li")
-                    .attr("class", "list-group-item d-flex justify-content-between align-items-center");
+                    .attr("class", "list-group-item d-flex justify-content-between align-items-center")
+                    .on("change", function(d){
+                        console.log(d3.event);
+                        console.log("change");
+                    });
 
-                var label = item
+                var label = item_enter
                     .append("label")
                     .attr("class", "form-check-label d-flex justify-content-between align-items-center");
 
@@ -81,10 +91,17 @@ function list_control() {
                     .attr("class", "check-text")
                     .text(function(d){return d.label});
 
+                // ENTER + UPDATE
+                var item_merged_selection = item_enter.merge(item_join_selection);
+
                 if (context.show_badges) {
-                    var badge = label
+                    item_enter
+                        .selectAll("label.form-check-label")
                         .append("span")
-                        .attr("class", "badge badge-primary badge-pill")
+                        .attr("class", "badge badge-primary badge-pill");
+
+                    item_merged_selection
+                        .selectAll("span.badge")
                         .text(function(d){return d.badge});
                 }
 
@@ -119,6 +136,8 @@ function list_control() {
         if (!str) return "";
         return str.trim().toUpperCase().replace(/\s+/g, " ");
     }
+
+    function noop(){};
 
 
     return my;
