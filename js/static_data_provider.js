@@ -7,15 +7,13 @@ var data_provider = (function() {
         if (__datasets__[name]) return __datasets__[name];
 
         return method(param, function(err, data){
-            if (err) throw err;
-
             __datasets__[name] = data;
-            return cb(data)
+            return cb(err, data)
         })
     }
     
     module.getDailyData = function(cb) {
-        return retrieve("daily", d3.csv, "data/daily.csv", function(data) {
+        return retrieve("daily", d3.csv, "data/daily.csv", function(err, data) {
             var filled = fillDates(data);
 
             filled.forEach(function(row){
@@ -23,27 +21,27 @@ var data_provider = (function() {
                 row.n = +row.n;
             });
 
-            return cb(filled);
+            return cb(err, filled);
         })
     };
 
     module.getProducersData = function(cb) {
-        return retrieve("producers", d3.csv, "data/producers.csv", function(data) {
+        return retrieve("producers", d3.csv, "data/producers.csv", function(err, data) {
             data.forEach(function(row) {
                 row.n = +row.n;
             });
 
-            return cb(data);
+            return cb(err, data);
         });
     };
 
     module.getRegionsData = function(cb) {
-        return retrieve("regions", d3.csv, "data/regions.csv", function(data) {
+        return retrieve("regions", d3.csv, "data/regions.csv", function(err, data) {
             data.forEach(function(row) {
                 row.n = +row.n;
             });
 
-            return cb(data);
+            return cb(err, data);
         });
     };
 

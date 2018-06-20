@@ -6,11 +6,10 @@ var data_provider = (function() {
 
     module.getDailyData = function(cb) {
         return d3.json(API_HOST +  "/api/timeseries/total", function(err, data){
-            if (err) throw err;
-            
+            if (err) return cb(err);
+
             data.forEach(function(row){row.d_reg = new Date(row.d_reg)});
-            
-            return cb(data);
+            return cb(err, data);
         });
     };
     
