@@ -54,4 +54,8 @@ svg.smallchart {
   .list-control .ps > .ps__rail-y {
     z-index: 2; }
 
+.small_multiples_item h3 {
+  font-size: 1.5em;
+  font-weight: 600; }
+
 /*# sourceMappingURL=application.css.map */

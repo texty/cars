@@ -17,6 +17,7 @@ function smallchart() {
 
         , minValueY
         , maxValueY
+        , fixed_y_axis
 
         ;
 
@@ -59,8 +60,8 @@ function smallchart() {
             if (!minY) minY = 0;
             if (!maxY) maxY = d3.max(data, function(d) {return d[varName]});
             
-            if (!minValueY) minValueY = minY;
-            if (!maxValueY) maxValueY = maxY;
+            // if (!minValueY) minValueY = minY;
+            // if (!maxValueY) maxValueY = maxY;
 
             y.domain([minY, maxY]);
 
@@ -114,9 +115,27 @@ function smallchart() {
 
 
             function update() {
-                main_path.attr("d", line);
-                main_area.attr("d", area);
+                if (!fixed_y_axis) maxY = d3.max(data, function(d) {return d[varName]});
+                y.domain([minY, maxY]);
+
+                g.select("g.axis.axis--y").call(yAxis);
+
+                main_path
+                    .datum(data)
+                    .transition()
+                    .duration(500)
+                    .attr("d", line);
+
+                main_area
+                    .datum(data)
+                    .transition()
+                    .duration(500)
+                    .attr("d", area);
+
+                return my;
             }
+
+            my.update = update;
 
             function repair_data(idx) {
                 if (!maxStep) return;

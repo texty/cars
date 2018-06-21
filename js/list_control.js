@@ -1,6 +1,7 @@
 function list_control() {
 
     var container
+        , id
         , context = {
             placeholder: "",
             items: [],
@@ -10,7 +11,8 @@ function list_control() {
         , ps
         , filter_term = "" //todo only internal
         , item_enter
-        , _onChange = noop
+        , dispatcher = d3.dispatch("change")
+        , on_change_counter = 0
         // , ul_container
         ;
 
@@ -44,11 +46,11 @@ function list_control() {
             searchbox.on("change input", function(){
                 var term = normalize(this.value);
                 item_enter.classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
-                
+                ps.update();
                 //todo
-                // Це фільтрування повинно бути тільки візуальним. 
+                // Це фільтрування повинно бути тільки візуальним.
                 // Тобто фільтр просто допомагає знайти потрібний елемент, але не впливає на стейт
-                
+
             });
 
             my.update = update;
@@ -57,10 +59,10 @@ function list_control() {
             function update() {
                 var item_join_selection = ul
                     .selectAll("li.list-group-item")
-                    .data(context.items, function(d) {return d.label;});
+                    .data(context.items, function(d) {return d.id;});
 
                 // UPDATE
-                // зараз це не требаЮ але може буде колись
+                // зараз це не треба, але може буде колись
                 // item_join_selection
                 //     .selectAll("label.form-check-label")
 
@@ -72,8 +74,8 @@ function list_control() {
                     .append("li")
                     .attr("class", "list-group-item d-flex justify-content-between align-items-center")
                     .on("change", function(d){
-                        console.log(d3.event);
-                        console.log("change");
+                        d.checked = d3.event.target.checked;
+                        dispatcher.call("change", this, context.items);
                     });
 
                 var label = item_enter
@@ -131,13 +133,25 @@ function list_control() {
         return my;
     };
 
+    my.id = function(value) {
+        if (!arguments.length) return context.id;
+        context.id = value;
+        return my;
+    };
+    
+    my.onChange = function(value) {
+        if (!arguments.length) return;
+        dispatcher.on("change." + ++on_change_counter, value);
+        return my;
+    };
+
 
     function normalize(str) {
         if (!str) return "";
         return str.trim().toUpperCase().replace(/\s+/g, " ");
     }
 
-    function noop(){};
+    function noop(){}
 
 
     return my;

@@ -47,7 +47,6 @@ function small_multiples() {
         return my;
     };
 
-
     my.update_item = function(value) {
         if (!arguments.length) return update_item;
         update_item = value;
