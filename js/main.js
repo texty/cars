@@ -48,54 +48,16 @@ data_provider.getProducersData(function(err, producers) {
     filter_observer.addFilter(producers_control, producers_control.id());
 });
 
-d3.queue()
-    .defer(data_provider.getRegionsData)
-    .defer(data_provider.getTimeSeriesTotal)
-    .await(function(err, regions, daily_data){
+data_provider.getTimeSeriesByQueryByRegion({}, function(err, nested ){
         if (err) throw err;
 
-        var items = regions.map(function(d){
-            var short_name = d.name.replace(" область", "");
-            return {label: short_name, badge: d.n, id: short_name}
-        });
+        console.log("nested");
+        console.log(nested);
 
-        //todo
-        // фейкові дані. будуть замінені нормальними
+        window.small_multiples_control = small_multiples()
+            .items(nested);
 
-        items.forEach(function(obj) {
-            obj.timeseries = daily_data;
-        });
-
-        var data = items;
-        ////
-
-
-
-
-        var containers = d3.select("#small_multiples")
-            .selectAll("div.small_multiples_item")
-            .data(data, function(d){return d.id})
-            .enter()
-            .append("div")
-            .attr("class", "small_multiples_item");
-
-        containers
-            .append("h3")
-            .text(function(d){return d.label});
-
-        var svgs = containers
-            .append("svg")
-            .attr("class", "smallchart")
-            .attr("width", "100%")
-            .attr("data-aspect-ratio", "0.05")
-            .attr("data-min-height", "50")
-            .each(function(d, i) {
-                var chart = smallchart()
-                    .data(daily_data)
-                    .varName("n");
-
-                d3.select(this).call(chart);
-            });
+        d3.select("#small_multiples").call(small_multiples_control);
 });
 
 
@@ -105,6 +67,13 @@ filter_observer.onChange(function(query) {
         if (err) throw err;
 
         total_chart.data(data).update();
-        console.log(data)
+    });
+
+    data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
+        if (err) throw err;
+    
+        small_multiples_control
+            .items(data)
+            .update();
     });
 });
