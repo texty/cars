@@ -1,8 +1,9 @@
 var data_provider = (function() {
     var module = {};
     
-    const API_HOST = "http://localhost:5000";
-    
+    // const API_HOST = "http://localhost:5000";
+    const API_HOST = "http://api-x32.texty.org.ua";
+
     const region_by_code = {
         "80": {name: "Київ", code: "80"},
         "12": {name: "Дніпропетровська область", code: "12"},
