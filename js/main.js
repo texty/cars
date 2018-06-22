@@ -1,17 +1,7 @@
+var total_chart = smallchart()
+    .varName("n");
 
-data_provider.getTimeSeriesTotal(function(err, daily_data) {
-    if (err) throw err;
-
-    console.log(daily_data);
-    window.total_chart = smallchart()
-        .data(daily_data)
-        .varName("n");
-
-
-    d3.select('#total_chart').call(total_chart);
-    // .on("change", update_pension_age_changed).on("dragend", ballance_chart.dragend);
-
-});
+var small_multiples_chart = small_multiples();
 
 data_provider.getRegionsData(function(err, regions) {
     if (err) throw err;
@@ -48,32 +38,30 @@ data_provider.getProducersData(function(err, producers) {
     filter_observer.addFilter(producers_control, producers_control.id());
 });
 
-data_provider.getTimeSeriesByQueryByRegion({}, function(err, nested ){
+data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
         if (err) throw err;
 
-        console.log("nested");
-        console.log(nested);
+        total_chart
+            .data(data.total);
+        d3.select('#total_chart').call(total_chart);
 
-        window.small_multiples_control = small_multiples()
-            .items(nested);
-
-        d3.select("#small_multiples").call(small_multiples_control);
+        small_multiples_chart
+            .items(data.by_region);
+        d3.select("#small_multiples").call(small_multiples_chart);
 });
 
 
-
 filter_observer.onChange(function(query) {
-    data_provider.getTimeSeriesByQuery(query, function(err, data) {
-        if (err) throw err;
-
-        total_chart.data(data).update();
-    });
+    small_multiples_chart.filterRegions(query.region);
 
     data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
         if (err) throw err;
     
-        small_multiples_control
-            .items(data)
+        small_multiples_chart
+            .items(data.by_region)
             .update();
+
+        total_chart.data(data.total).update();
+
     });
 });

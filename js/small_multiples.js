@@ -57,6 +57,18 @@ function small_multiples() {
             }
 
             my.update = update;
+
+            my.filterRegions = function(regions) {
+                if (!regions || !regions.length) return item_containers.classed("hidden", false);
+
+                item_containers
+                    .filter(function(d) {return regions.indexOf(d.key) >= 0})
+                    .classed("hidden", false);
+
+                item_containers
+                    .filter(function(d) {return regions.indexOf(d.key) < 0})
+                    .classed("hidden", true);
+            }
         });
     }
 
@@ -65,25 +77,7 @@ function small_multiples() {
         items = value;
         return my;
     };
-
-    // my.create_item = function(value) {
-    //     if (!arguments.length) return create_item;
-    //     create_item = value;
-    //     return my;
-    // };
-    //
-    // my.update_item = function(value) {
-    //     if (!arguments.length) return update_item;
-    //     update_item = value;
-    //     return my;
-    // };
-
-    // my.item_object_generator = function(value) {
-    //     if (!arguments.length) return item_object_generator;
-    //     item_object_generator = value;
-    //     return my;
-    // };
-
+    
 
     function noop() {}
 

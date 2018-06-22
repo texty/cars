@@ -32,6 +32,8 @@ var data_provider = (function() {
         "01": {name: "АР Крим", code: "01"},
         "85": {name: "Севастополь", code: "85"}
     };
+
+    const dates_extent = ['2017-01-03', '2018-03-06'];
     
     Object.keys(region_by_code).forEach(function(code) {
         var val = region_by_code[code];
@@ -42,7 +44,7 @@ var data_provider = (function() {
         return d3.json(API_HOST +  "/api/timeseries/total", function(err, data){
             if (err) return cb(err);
 
-            var filled = fillDates(data);
+            var filled = fillDates(data, dates_extent);
 
             filled.forEach(function(row){
                 row.d_reg = new Date(row.d_reg);
@@ -87,7 +89,7 @@ var data_provider = (function() {
         return d3.json(API_HOST +  "/api/timeseries/query?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
-            var filled = fillDates(data);
+            var filled = fillDates(data, dates_extent);
 
             filled.forEach(function(row){
                 row.d_reg = new Date(row.d_reg);
@@ -105,10 +107,10 @@ var data_provider = (function() {
         return d3.json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
-            var nested = d3.nest()
+            var by_region = d3.nest()
                 .key(function(d){return d.code})
                 .rollup(function(leaves) {
-                    var filled = fillDates(leaves);
+                    var filled = fillDates(leaves, dates_extent);
                     filled.forEach(function(row){
                         row.d_reg = new Date(row.d_reg);
                         row.n = +row.n;
@@ -117,7 +119,7 @@ var data_provider = (function() {
                 })
                 .entries(data);
 
-            nested.forEach(function(d){
+            by_region.forEach(function(d){
                 d.region = region_by_code[d.key];
                 d.timeseries = d.value;
                 delete d.value;
@@ -125,13 +127,46 @@ var data_provider = (function() {
                 d.total = d3.sum(d.timeseries, function(obj){return obj.n});
             });
 
-            nested.sort(function(a,b){return b.total - a.total});
+            by_region.sort(function(a,b){return b.total - a.total});
 
-            console.log(nested);
-
-            return cb(err, nested);
+            var total = calculateTotal(by_region);
+            
+            var result = {
+                by_region: by_region,
+                total: total
+            };
+            console.log(result);
+            return cb(err, result);
         });
     };
+
+
+    function calculateTotal(by_region) {
+        var array_of_arrays = Object.keys(by_region)
+            .map(function(key){ return by_region[key].timeseries});
+
+        return sumArrays(array_of_arrays);
+    }
+
+
+    function sumArrays(array_of_arrays) {
+        if (!array_of_arrays) return;
+        if (array_of_arrays.length < 2) return array_of_arrays[0];
+
+        var first = array_of_arrays[0];
+        var rest = array_of_arrays.slice(1);
+
+        return first.map(function(obj, i) {
+            return sumFunction(obj, rest.map(function(arr) {return arr[i]} ));
+        })
+    }
+
+    function sumFunction(first, rest) {
+        return {
+            d_reg: first.d_reg,
+            n: first.n + d3.sum(rest, function(d){return d.n})
+        }
+    }
 
     return module;
 })();
