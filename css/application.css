@@ -63,6 +63,10 @@ svg.smallchart {
     font-size: 1em;
     font-weight: 600; }
 
+#filter-badges {
+  margin-top: 50px;
+  border: 1px solid rgba(44, 104, 250, 0.125); }
+
 body {
   color: #424242; }
 
@@ -79,5 +83,13 @@ svg text {
     max-width: 600px; }
   .header-block h3 {
     font-weight: 800; }
+
+h6.header-badge {
+  display: inline-block;
+  text-transform: uppercase;
+  color: #2c68fa;
+  border: 1px solid #2c68fa;
+  padding-left: 0.2em;
+  padding-right: 0.2em; }
 
 /*# sourceMappingURL=application.css.map */
