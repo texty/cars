@@ -24,7 +24,7 @@ svg.smallchart {
     stroke: #85a561; }
   svg.smallchart .area.main {
     fill-opacity: 0.8;
-    fill: #ff7f00; }
+    fill: #2c68fa; }
 
 .hidden {
   display: none !important; }
@@ -35,13 +35,14 @@ svg.smallchart {
   .list-control input.searchbox {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(44, 104, 250, 0.125);
     border-radius: 2px;
     padding: 12px 20px 12px 12px;
     margin-top: 20px; }
   .list-control .list-group-item {
     padding-top: 0.2em;
-    padding-bottom: 0.2em; }
+    padding-bottom: 0.2em;
+    border: 1px solid rgba(44, 104, 250, 0.125); }
     .list-control .list-group-item label.form-check-label {
       width: 100%; }
     .list-control .list-group-item .badge {
@@ -53,9 +54,19 @@ svg.smallchart {
     opacity: 0.6; }
   .list-control .ps > .ps__rail-y {
     z-index: 2; }
+  .list-control .badge-primary {
+    background-color: #FBB713; }
 
-.small_multiples_item h3 {
-  font-size: 1.5em;
-  font-weight: 600; }
+.small_multiples_item {
+  display: inline-block; }
+  .small_multiples_item h3 {
+    font-size: 1em;
+    font-weight: 600; }
+
+body {
+  color: #424242; }
+
+svg text {
+  fill: #424242; }
 
 /*# sourceMappingURL=application.css.map */

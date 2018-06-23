@@ -12,13 +12,12 @@ function small_multiples() {
         selection.each(function() {
 
             parent_container = d3.select(this);
-
             var item_containers = parent_container
                 .selectAll("div.small_multiples_item")
                 .data(items, function(d){return d.key})
                 .enter()
                 .append("div")
-                .attr("class", "small_multiples_item");
+                .attr("class", "small_multiples_item col-6 col-md-4");
 
             item_containers
                 .append("h3")
@@ -45,12 +44,9 @@ function small_multiples() {
                     .selectAll("div.small_multiples_item")
                     .data(items, function(d){return d.key})
                     .each(function(d, i){
-                        console.log(d);
-
                         this.__chart__
                             .data(d.timeseries)
                             .update();
-
                     });
 
                 return my;

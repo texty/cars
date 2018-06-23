@@ -9,7 +9,7 @@
     width: 100%;
 
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid rgba($blue, 0.125);
     border-radius: 2px;
 
     //font-size: 16px;
@@ -21,6 +21,8 @@
   .list-group-item {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
+
+    border: 1px solid rgba($blue, 0.125);
 
     label.form-check-label {
       width: 100%;
@@ -47,5 +49,8 @@
     z-index: 2;
   }
 
+  .badge-primary {
+    background-color: #FBB713;
+  }
 
 }

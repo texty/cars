@@ -1,5 +1,5 @@
 function fillDates(sorted, extent) {
-    if (sorted.length < 3) return sorted;
+    if (sorted.length < 0) return sorted;
 
     if (!extent) extent = d3.extent(sorted, function(d){return d.d_reg});
     var sequence = datesInRange(extent[0], extent[1]);

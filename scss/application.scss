@@ -8,4 +8,13 @@
 @import "small_multiples_item";
 
 
+body {
+  color: $main-text;
+}
 
+
+svg {
+  text {
+    fill: $main-text;
+  }
+}
