@@ -18,3 +18,25 @@ svg {
     fill: $main-text;
   }
 }
+
+.header-block {
+  color: white;
+  background-color: $blue;
+
+  padding-top: 2em;
+  padding-bottom: 2em;
+
+  .header-text-block {
+    max-width: 600px;
+  }
+
+  h3 {
+    font-weight: 800;
+  }
+
+  margin-bottom: 5em;
+}
+
+
+
+
