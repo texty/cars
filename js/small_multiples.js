@@ -47,7 +47,8 @@ function small_multiples() {
                         this.__chart__
                             .data(d.timeseries)
                             .update();
-                    });
+                    })
+                    .order();
 
                 return my;
             }

@@ -56,7 +56,9 @@ filter_observer.onChange(function(query) {
 
     data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
         if (err) throw err;
-    
+
+        console.log(data.by_region);
+
         small_multiples_chart
             .items(data.by_region)
             .update();
