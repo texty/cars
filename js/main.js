@@ -21,10 +21,27 @@ var models_control = list_control()
     .show_badges(true);
 d3.select('#models_control').call(models_control);
 
+var years_control = list_control()
+    .id("make_year")
+    .placeholder("Введіть рік випуску")
+    .show_badges(true);
+d3.select('#years_control').call(years_control);
 
 filter_observer.addFilter(regions_control, regions_control.id());
 filter_observer.addFilter(producers_control, producers_control.id());
 filter_observer.addFilter(models_control, models_control.id());
+filter_observer.addFilter(years_control, years_control.id());
+
+var badge_control = badges_control();
+d3.select("#badge_control").call(badge_control);
+
+badge_control.onChange(function(change) {
+   if (change.region) regions_control.uncheck(change.region);
+   if (change.producer) producers_control.uncheck(change.producer);
+    
+    
+});
+
 
 
 data_provider.getRegionsData(function(err, regions) {
@@ -50,7 +67,7 @@ data_provider.getRegionsData(function(err, regions) {
                 d.label = d.producer;
                 d.badge = d.n;
             });
-            console.log(data);
+
             producers_control
                 .items(data)
                 .update();
@@ -87,16 +104,32 @@ data_provider.getProducersData({}, function(err, producers) {
                 });
 
                 models_control
+                    .state(query.producer[0])
                     .items(data)
                     .update();
             })
         } else {
             models_control
+                .state(null)
                 .items([])
                 .update()
         }
     });
 });
+
+
+data_provider.getYearsData({}, function(err, make_years) {
+    if (err) throw err;
+
+    var items = make_years.map(function(d){
+        return {label: d.make_year, badge: d.n, id: d.id}
+    });
+
+    years_control
+        .items(items)
+        .update();
+});
+
 
 data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
         if (err) throw err;
@@ -113,9 +146,11 @@ data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
 
 filter_observer.onChange(function(query) {
     small_multiples_chart.filterRegions(query.region);
+    badge_control.query(query).update();
 
     data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
         if (err) throw err;
+
 
         console.log(data.by_region);
 

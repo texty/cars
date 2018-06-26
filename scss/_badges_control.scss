@@ -1,0 +1,54 @@
+#badge_control {
+  margin-top: 50px;
+  border: 1px solid rgba($blue, 0.125);
+
+  counter-reset: index;
+
+  .badge-row {
+    padding-top: 1em;
+    padding-bottom: 1em;
+
+    &.countable {
+      &:before {
+        //background-color: #d0cbcf;
+        //float: left;
+        margin-top: 0.5em;
+        width: 1em;
+        text-align: center;
+        border-radius: 25px;
+        content: counters(index, ".") " ";
+        counter-increment: index;
+      }
+    }
+  }
+
+
+
+  .badge-item {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: $orange;
+
+    color: white;
+
+    min-height: 2.5em;
+    line-height: 2.5em;
+    min-width: 4em;
+
+    margin-left: 1em;
+
+    padding: 0 0.5em;
+    cursor: pointer;
+    vertical-align: middle;
+
+
+
+    &:after {
+      content: "×";
+      margin-left: 0.5em;
+      font-weight: 800;
+      font-size: 1.5em;
+      vertical-align: middle;
+    }
+  }
+}

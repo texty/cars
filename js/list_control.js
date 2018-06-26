@@ -6,7 +6,8 @@ function list_control() {
             items: [],
             show_badges: false,
             id: null,
-            order: true
+            order: true,
+            state: null
         }
         , badgeFormat
         , ps
@@ -57,6 +58,13 @@ function list_control() {
             my.update = update;
             update();
 
+            my.uncheck = function(value) {
+                ul.selectAll("li.list-group-item")
+                    .select("input")
+                    .filter(function(d){return d.id === value.id})
+                    .node().click();
+            };
+
             function update() {
                 var item_join_selection = ul
                     .selectAll("li.list-group-item")
@@ -96,6 +104,12 @@ function list_control() {
 
                 // ENTER + UPDATE
                 var item_merged_selection = item_enter.merge(item_join_selection);
+
+                item_merged_selection
+                    .select("input")
+                    .each(function(d){
+                       d.checked = this.checked;
+                    });
 
                 if (context.show_badges) {
                     item_enter
@@ -149,14 +163,19 @@ function list_control() {
         context.order = value;
         return my;
     };
+
+    my.state = function(value) {
+        if (!arguments.length) return context.state;
+        context.state = value;
+        return my;
+    };
     
     my.onChange = function(value) {
         if (!arguments.length) return;
         dispatcher.on("change." + ++on_change_counter, value);
         return my;
     };
-
-
+    
     function normalize(str) {
         if (!str) return "";
         return str.trim().toUpperCase().replace(/\s+/g, " ");

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   font-family: "Open Sans", sans-serif;
   font-size: 14px; }
@@ -31,18 +32,22 @@ svg.smallchart {
 
 .list-control {
   width: 100%;
+  border: 1px solid rgba(44, 104, 250, 0.125);
   /* to make scrollbars always visible */ }
   .list-control input.searchbox {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid rgba(44, 104, 250, 0.125);
+    border: none;
+    border-bottom: 1px solid rgba(44, 104, 250, 0.125);
     border-radius: 2px;
-    padding: 12px 20px 12px 12px;
-    margin-top: 20px; }
+    padding: 12px 20px 12px 12px; }
   .list-control .list-group-item {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
-    border: 1px solid rgba(44, 104, 250, 0.125); }
+    border: 1px solid rgba(44, 104, 250, 0.125);
+    border-radius: 0; }
+    .list-control .list-group-item:first-child {
+      border: none; }
     .list-control .list-group-item label.form-check-label {
       width: 100%; }
     .list-control .list-group-item .badge {
@@ -63,9 +68,38 @@ svg.smallchart {
     font-size: 1em;
     font-weight: 600; }
 
-#filter-badges {
+#badge_control {
   margin-top: 50px;
-  border: 1px solid rgba(44, 104, 250, 0.125); }
+  border: 1px solid rgba(44, 104, 250, 0.125);
+  counter-reset: index; }
+  #badge_control .badge-row {
+    padding-top: 1em;
+    padding-bottom: 1em; }
+    #badge_control .badge-row.countable:before {
+      margin-top: 0.5em;
+      width: 1em;
+      text-align: center;
+      border-radius: 25px;
+      content: counters(index,".") " ";
+      counter-increment: index; }
+  #badge_control .badge-item {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #FAA12D;
+    color: white;
+    min-height: 2.5em;
+    line-height: 2.5em;
+    min-width: 4em;
+    margin-left: 1em;
+    padding: 0 0.5em;
+    cursor: pointer;
+    vertical-align: middle; }
+    #badge_control .badge-item:after {
+      content: "×";
+      margin-left: 0.5em;
+      font-weight: 800;
+      font-size: 1.5em;
+      vertical-align: middle; }
 
 body {
   color: #424242; }

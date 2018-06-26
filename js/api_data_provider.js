@@ -1,45 +1,15 @@
 var data_provider = (function() {
     var module = {};
     
-    // const API_HOST = "http://localhost:5000";
-    const API_HOST = "http://api-x32.texty.org.ua";
-
-    const region_by_code = {
-        "80": {name: "Київ", code: "80"},
-        "12": {name: "Дніпропетровська область", code: "12"},
-        "51": {name: "Одеська область", code: "51"},
-        "32": {name: "Київська область", code: "32"},
-        "63": {name: "Харківська область", code: "63"},
-        "46": {name: "Львівська область", code: "46"},
-        "14": {name: "Донецька область", code: "14"},
-        "23": {name: "Запорізька область", code: "23"},
-        "05": {name: "Вінницька область", code: "05"},
-        "53": {name: "Полтавська область", code: "53"},
-        "71": {name: "Черкаська область", code: "71"},
-        "68": {name: "Хмельницька область", code: "68"},
-        "18": {name: "Житомирська область", code: "18"},
-        "26": {name: "Івано-Франківська область", code: "26"},
-        "48": {name: "Миколаївська область", code: "48"},
-        "56": {name: "Рівненська область", code: "56"},
-        "07": {name: "Волинська область", code: "07"},
-        "61": {name: "Тернопільська область", code: "61"},
-        "35": {name: "Кіровоградська область", code: "35"},
-        "59": {name: "Сумська область", code: "59"},
-        "74": {name: "Чернігівська область", code: "74"},
-        "65": {name: "Херсонська область", code: "65"},
-        "21": {name: "Закарпатська область", code: "21"},
-        "44": {name: "Луганська область", code: "44"},
-        "73": {name: "Чернівецька область", code: "73"},
-        "01": {name: "АР Крим", code: "01"},
-        "85": {name: "Севастополь", code: "85"}
-    };
+    const API_HOST = "http://localhost:5000";
+    // const API_HOST = "http://api-x32.texty.org.ua";
 
     // Повинні бути понеділками!!!!
     const dates_extent = ['2017-01-02', '2018-03-05'];
     // const dates_extent = ['2017-01-03', '2018-03-06'];
 
-    Object.keys(region_by_code).forEach(function(code) {
-        var val = region_by_code[code];
+    Object.keys(region_utils.REGION_BY_CODE).forEach(function(code) {
+        var val = region_utils.REGION_BY_CODE[code];
         val.short_name = val.name.replace(" область", "");
     });
 
@@ -98,6 +68,23 @@ var data_provider = (function() {
         });
     };
 
+    var getYearsData_xhr;
+    module.getYearsData = function(query, cb) {
+        if (getYearsData_xhr) getYearsData_xhr.abort();
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getYearsData_xhr = d3.json(API_HOST +  "/api/make_years?json=" + query_str, function(err, data){
+            if (err) return cb(err);
+
+            data.forEach(function(row){
+                row.n = +row.n;
+                row.id = row.make_year;
+            });
+
+            return cb(err, data);
+        });
+    };
+
     var getTimeSeriesByQueryByRegion_xhr;
     var getTimeSeriesByQueryByRegion_cache = {};
     module.getTimeSeriesByQueryByRegion = function(query, cb) {
@@ -125,7 +112,7 @@ var data_provider = (function() {
             fillRegions(by_region, query.region);
             
             by_region.forEach(function(d){
-                d.region = region_by_code[d.key];
+                d.region = region_utils.REGION_BY_CODE[d.key];
                 d.timeseries = d.value;
                 delete d.value;
 
@@ -177,7 +164,7 @@ var data_provider = (function() {
     }
 
     function fillRegions(by_region, regions) {
-        if (!regions || !regions.length) regions = Object.keys(region_by_code);
+        if (!regions || !regions.length) regions = Object.keys(region_utils.REGION_BY_CODE);
 
         regions.forEach(function(region_code){
             var region_data = by_region.filter(function(obj){return region_code === obj.key})[0];

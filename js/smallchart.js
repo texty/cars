@@ -12,6 +12,7 @@ function smallchart() {
             return function(v) {return base(v).replace(/,/g, " ")}
         })()
         , yTickValues
+        , yTicks
         , showTips
         , x
 
@@ -80,6 +81,7 @@ function smallchart() {
 
             if (yFormat) yAxis.tickFormat(yFormat);
             if (yTickValues) yAxis.tickValues(yTickValues);
+            if (yTicks) yAxis.ticks(yTicks);
 
             g.append("g")
                 .attr("class", "axis axis--x")
@@ -230,6 +232,12 @@ function smallchart() {
     my.yTickValues = function(value) {
         if (!arguments.length) return yTickValues;
         yTickValues = value;
+        return my;
+    };
+
+    my.yTicks = function(value) {
+        if (!arguments.length) return yTicks;
+        yTicks = value;
         return my;
     };
 
