@@ -45,17 +45,17 @@ function smallchart() {
                 .range([height, 0]);
 
             var line = d3.line()
-                .x(function(d) { return x(d.d_reg)})
+                .x(function(d) { return x(d.monday)})
                 .y(function(d) { return y(d[varName])})
-                .curve(d3.curveStep);
+                .curve(d3.curveStepAfter);
 
             var area = d3.area()
-                .x(function(d) {return x(d.d_reg)})
+                .x(function(d) {return x(d.monday)})
                 .y0(y(0))
                 .y1(function(d) {return y(d[varName])})
-                .curve(d3.curveStep);
+                .curve(d3.curveStepAfter);
             
-            x.domain(d3.extent(data, function(d) {return d.d_reg}));
+            x.domain(d3.extent(data, function(d) {return d.monday}));
 
             if (!minY) minY = 0;
             if (!maxY) maxY = d3.max(data, function(d) {return d[varName]});

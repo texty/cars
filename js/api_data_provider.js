@@ -1,8 +1,8 @@
 var data_provider = (function() {
     var module = {};
     
-    // const API_HOST = "http://localhost:5000";
-    const API_HOST = "http://api-x32.texty.org.ua";
+    const API_HOST = "http://localhost:5000";
+    // const API_HOST = "http://api-x32.texty.org.ua";
 
     const region_by_code = {
         "80": {name: "Київ", code: "80"},
@@ -34,26 +34,15 @@ var data_provider = (function() {
         "85": {name: "Севастополь", code: "85"}
     };
 
-    const dates_extent = ['2017-01-03', '2018-03-06'];
-    
+    // Повинні бути понеділками!!!!
+    const dates_extent = ['2017-01-02', '2018-03-05'];
+    // const dates_extent = ['2017-01-03', '2018-03-06'];
+
     Object.keys(region_by_code).forEach(function(code) {
         var val = region_by_code[code];
         val.short_name = val.name.replace(" область", "");
     });
-    
-    // module.getTimeSeriesTotal = function(cb) {
-    //     return d3.json(API_HOST +  "/api/timeseries/total", function(err, data){
-    //         if (err) return cb(err);
-    //
-    //         var filled = fillDates(data, dates_extent);
-    //
-    //         filled.forEach(function(row){
-    //             row.d_reg = new Date(row.d_reg);
-    //             row.n = +row.n;
-    //         });
-    //         return cb(err, filled);
-    //     });
-    // };
+
 
     var getProducersData_xhr;
     module.getProducersData = function(cb) {
@@ -86,7 +75,7 @@ var data_provider = (function() {
         });
     };
 
-    // module.getTimeSeriesByQuery = function(query, cb) {
+    // module.getTimeSeriesByQuery li= function(query, cb) {
     //     var json_str = JSON.stringify(query);
     //
     //     var query_str = encodeURI(json_str);
@@ -123,7 +112,7 @@ var data_provider = (function() {
                 .rollup(function(leaves) {
                     var filled = fillDates(leaves, dates_extent);
                     filled.forEach(function(row){
-                        row.d_reg = new Date(row.d_reg);
+                        row.monday = new Date(row.monday);
                         row.n = +row.n;
                     });
                     return filled;
@@ -177,7 +166,7 @@ var data_provider = (function() {
 
     function sumFunction(first, rest) {
         return {
-            d_reg: first.d_reg,
+            monday: first.monday,
             n: first.n + d3.sum(rest, function(d){return d.n})
         }
     }
@@ -194,7 +183,7 @@ var data_provider = (function() {
                 };
 
                 region_data.value.forEach(function(row){
-                    row.d_reg = new Date(row.d_reg);
+                    row.monday = new Date(row.monday);
                 });
 
                 by_region.push(region_data);

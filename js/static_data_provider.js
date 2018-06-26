@@ -17,7 +17,7 @@ var data_provider = (function() {
             var filled = fillDates(data);
 
             filled.forEach(function(row){
-                row.d_reg = new Date(row.d_reg);
+                row.monday = new Date(row.monday);
                 row.n = +row.n;
             });
 
