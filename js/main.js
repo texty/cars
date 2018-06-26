@@ -3,6 +3,30 @@ var total_chart = smallchart()
 
 var small_multiples_chart = small_multiples();
 
+var regions_control = list_control()
+    .id("region")
+    .placeholder("Введіть область")
+    .show_badges(true);
+d3.select('#regions_control').call(regions_control);
+
+var producers_control = list_control()
+    .id("producer")
+    .placeholder("Введіть марку")
+    .show_badges(true);
+d3.select('#producers_control').call(producers_control);
+
+var models_control = list_control()
+    .id("model")
+    .placeholder("Введіть модель")
+    .show_badges(true);
+d3.select('#models_control').call(models_control);
+
+
+filter_observer.addFilter(regions_control, regions_control.id());
+filter_observer.addFilter(producers_control, producers_control.id());
+filter_observer.addFilter(models_control, models_control.id());
+
+
 data_provider.getRegionsData(function(err, regions) {
     if (err) throw err;
 
@@ -10,32 +34,68 @@ data_provider.getRegionsData(function(err, regions) {
         return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
     });
 
-    var regions_control = list_control()
-        .id("region")
-        .placeholder("Введіть область")
-        .show_badges(true)
-        .items(items);
+    regions_control
+        .items(items)
+        .update();
 
-    d3.select('#regions_control').call(regions_control);
-    filter_observer.addFilter(regions_control, regions_control.id());
+    regions_control.onChange(function(event){
+        // var data = event.all;
+
+        var query = filter_observer.getCurrentQuery();
+
+        data_provider.getProducersData(query, function(err, data) {
+            if (err) throw err;
+
+            data.forEach(function(d){
+                d.label = d.producer;
+                d.badge = d.n;
+            });
+            console.log(data);
+            producers_control
+                .items(data)
+                .update();
+        })
+    });
 });
 
 
-data_provider.getProducersData(function(err, producers) {
+data_provider.getProducersData({}, function(err, producers) {
     if (err) throw err;
 
     var items = producers.map(function(d){
         return {label: d.producer, badge: d.n, id: d.producer}
     });
 
-    var producers_control = list_control()
-        .id("producer")
-        .placeholder("Введіть марку")
-        .show_badges(true)
-        .items(items);
+    producers_control
+        .items(items)
+        .update();
 
-    d3.select('#producers_control').call(producers_control);
-    filter_observer.addFilter(producers_control, producers_control.id());
+
+    producers_control.onChange(function(event){
+        var data = event.change;
+        
+        if (data.checked) {
+            var query = filter_observer.getCurrentQuery();
+            query.producer = [data.id];
+
+            data_provider.getModelsData(query, function(err, data) {
+                if (err) throw err;
+
+                data.forEach(function(d){
+                    d.label = d.model;
+                    d.badge = d.n;
+                });
+
+                models_control
+                    .items(data)
+                    .update();
+            })
+        } else {
+            models_control
+                .items([])
+                .update()
+        }
+    });
 });
 
 data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){

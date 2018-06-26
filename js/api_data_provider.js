@@ -44,25 +44,10 @@ var data_provider = (function() {
     });
 
 
-    var getProducersData_xhr;
-    module.getProducersData = function(cb) {
-        if (getProducersData_xhr) getProducersData_xhr.abort();
-        getProducersData_xhr = d3.json(API_HOST +  "/api/producers", function(err, data){
-            if (err) return cb(err);
-
-            data.forEach(function(row){
-                row.n = +row.n;
-                row.id = row.producer;
-            });
-
-            return cb(err, data);
-        });
-    };
-
     var getRegionsData_xhr;
     module.getRegionsData = function(cb) {
         if (getRegionsData_xhr) getRegionsData_xhr.abort();
-        return d3.json(API_HOST +  "/api/regions", function(err, data){
+        getRegionsData_xhr = d3.json(API_HOST +  "/api/regions", function(err, data){
             if (err) return cb(err);
 
             data.forEach(function(row){
@@ -74,6 +59,42 @@ var data_provider = (function() {
             return cb(err, data);
         });
     };
+
+    var getProducersData_cache = {};
+    var getProducersData_xhr;
+    module.getProducersData = function(query, cb) {
+        if (getProducersData_xhr) getProducersData_xhr.abort();
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getProducersData_xhr = d3.json(API_HOST +  "/api/producers?json=" + query_str, function(err, data){
+            if (err) return cb(err);
+
+            data.forEach(function(row){
+                row.n = +row.n;
+                row.id = row.producer;
+            });
+
+            return cb(err, data);
+        });
+    };
+
+    var getModelsData_xhr;
+    module.getModelsData = function(query, cb) {
+        if (getModelsData_xhr) getModelsData_xhr.abort();
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getModelsData_xhr = d3.json(API_HOST +  "/api/models?json=" + query_str, function(err, data){
+            if (err) return cb(err);
+
+            data.forEach(function(row){
+                row.n = +row.n;
+                row.id = row.model;
+            });
+
+            return cb(err, data);
+        });
+    };
+
 
     // module.getTimeSeriesByQuery li= function(query, cb) {
     //     var json_str = JSON.stringify(query);
@@ -98,11 +119,9 @@ var data_provider = (function() {
     module.getTimeSeriesByQueryByRegion = function(query, cb) {
         if (getTimeSeriesByQueryByRegion_xhr) getTimeSeriesByQueryByRegion_xhr.abort();
 
-        var json_str = JSON.stringify(query);
+        var query_str = encodeURI(JSON.stringify(query));
 
-        if (getTimeSeriesByQueryByRegion_cache[json_str]) return cb(null, getTimeSeriesByQueryByRegion_cache[json_str]);
-
-        var query_str = encodeURI(json_str);
+        if (getTimeSeriesByQueryByRegion_cache[query_str]) return cb(null, getTimeSeriesByQueryByRegion_cache[query_str]);
 
         getTimeSeriesByQueryByRegion_xhr = d3.json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
             if (err) return cb(err);
@@ -136,12 +155,14 @@ var data_provider = (function() {
                 by_region: by_region,
                 total: total
             };
-            getTimeSeriesByQueryByRegion_cache[json_str] = result;
+            getTimeSeriesByQueryByRegion_cache[query_str] = result;
             return cb(err, result);
         });
 
         return;
     };
+
+
 
 
     function calculateTotal(by_region) {

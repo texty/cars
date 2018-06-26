@@ -1,11 +1,12 @@
 function list_control() {
 
     var container
-        , id
         , context = {
             placeholder: "",
             items: [],
-            show_badges: false
+            show_badges: false,
+            id: null,
+            order: true
         }
         , badgeFormat
         , ps
@@ -45,7 +46,7 @@ function list_control() {
 
             searchbox.on("change input", function(){
                 var term = normalize(this.value);
-                item_enter.classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
+                ul.selectAll("li.list-group-item").classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
                 ps.update();
                 //todo
                 // Це фільтрування повинно бути тільки візуальним.
@@ -75,7 +76,7 @@ function list_control() {
                     .attr("class", "list-group-item d-flex justify-content-between align-items-center")
                     .on("change", function(d){
                         d.checked = d3.event.target.checked;
-                        dispatcher.call("change", this, context.items);
+                        dispatcher.call("change", this, {change: d, all: context.items});
                     });
 
                 var label = item_enter
@@ -98,15 +99,19 @@ function list_control() {
 
                 if (context.show_badges) {
                     item_enter
-                        .selectAll("label.form-check-label")
+                        .select("label.form-check-label")
                         .append("span")
                         .attr("class", "badge badge-primary badge-pill");
 
                     item_merged_selection
-                        .selectAll("span.badge")
-                        .text(function(d){return d.badge});
+                        .select("span.badge")
+                        .text(function(d){
+                            return d.badge
+                        });
                 }
 
+                if (context.order) item_merged_selection.order();
+                
                 ps.update();
 
                 return my;
@@ -136,6 +141,12 @@ function list_control() {
     my.id = function(value) {
         if (!arguments.length) return context.id;
         context.id = value;
+        return my;
+    };
+
+    my.order = function(value) {
+        if (!arguments.length) return context.order;
+        context.order = value;
         return my;
     };
     

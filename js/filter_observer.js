@@ -53,6 +53,10 @@ var filter_observer = (function() {
         dispatcher.on("change." + ++on_change_counter, value);
         return module;
     };
+    
+    module.getCurrentQuery = function() {
+        return generateQuery();
+    };
 
     function allSelected(data) {
         return data.every(function(d){return !d.checked}) || data.every(function(d){return d.checked})
