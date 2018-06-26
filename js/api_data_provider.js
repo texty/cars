@@ -64,8 +64,10 @@ var data_provider = (function() {
     var getProducersData_xhr;
     module.getProducersData = function(query, cb) {
         if (getProducersData_xhr) getProducersData_xhr.abort();
-        var query_str = encodeURI(JSON.stringify(query));
 
+        var query_str = encodeURI(JSON.stringify(query));
+        if (getProducersData_cache[query_str]) return cb(null, getProducersData_cache[query_str]);
+        
         getProducersData_xhr = d3.json(API_HOST +  "/api/producers?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
@@ -74,6 +76,7 @@ var data_provider = (function() {
                 row.id = row.producer;
             });
 
+            getProducersData_cache[query_str] = data;
             return cb(err, data);
         });
     };
@@ -94,25 +97,6 @@ var data_provider = (function() {
             return cb(err, data);
         });
     };
-
-
-    // module.getTimeSeriesByQuery li= function(query, cb) {
-    //     var json_str = JSON.stringify(query);
-    //
-    //     var query_str = encodeURI(json_str);
-    //
-    //     return d3.json(API_HOST +  "/api/timeseries/query?json=" + query_str, function(err, data){
-    //         if (err) return cb(err);
-    //
-    //         var filled = fillDates(data, dates_extent);
-    //
-    //         filled.forEach(function(row){
-    //             row.d_reg = new Date(row.d_reg);
-    //             row.n = +row.n;
-    //         });
-    //         return cb(err, filled);
-    //     });
-    // };
 
     var getTimeSeriesByQueryByRegion_xhr;
     var getTimeSeriesByQueryByRegion_cache = {};
