@@ -43,6 +43,40 @@ badge_control.onChange(function(change) {
 });
 
 
+function updateProducers() {
+    var query = filter_observer.getCurrentQuery();
+
+    data_provider.getProducersData(query, function(err, data) {
+        if (err) throw err;
+
+        data.forEach(function(d){
+            d.label = d.producer;
+            d.badge = d.n;
+        });
+
+        producers_control
+            .items(data)
+            .update();
+    })
+}
+
+function updateMakeYears() {
+    var query = filter_observer.getCurrentQuery();
+
+    data_provider.getYearsData(query, function(err, data) {
+        if (err) throw err;
+
+        data.forEach(function(d){
+            d.label=d.make_year;
+            d.badge=d.n;
+            d.id=d.make_year;
+        });
+
+        years_control
+            .items(data)
+            .update();
+    })
+}
 
 data_provider.getRegionsData(function(err, regions) {
     if (err) throw err;
@@ -56,22 +90,8 @@ data_provider.getRegionsData(function(err, regions) {
         .update();
 
     regions_control.onChange(function(event){
-        // var data = event.all;
-
-        var query = filter_observer.getCurrentQuery();
-
-        data_provider.getProducersData(query, function(err, data) {
-            if (err) throw err;
-
-            data.forEach(function(d){
-                d.label = d.producer;
-                d.badge = d.n;
-            });
-
-            producers_control
-                .items(data)
-                .update();
-        })
+        updateProducers();
+        updateMakeYears();
     });
 });
 
@@ -86,7 +106,6 @@ data_provider.getProducersData({}, function(err, producers) {
     producers_control
         .items(items)
         .update();
-
 
     producers_control.onChange(function(event){
         var data = event.change;
@@ -107,6 +126,7 @@ data_provider.getProducersData({}, function(err, producers) {
                     .state(query.producer[0])
                     .items(data)
                     .update();
+
             })
         } else {
             models_control
@@ -114,21 +134,16 @@ data_provider.getProducersData({}, function(err, producers) {
                 .items([])
                 .update()
         }
+
+        updateMakeYears();
     });
 });
 
-
-data_provider.getYearsData({}, function(err, make_years) {
-    if (err) throw err;
-
-    var items = make_years.map(function(d){
-        return {label: d.make_year, badge: d.n, id: d.id}
-    });
-
-    years_control
-        .items(items)
-        .update();
+models_control.onChange(function(event){
+    updateMakeYears();
 });
+
+updateMakeYears();
 
 
 data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
