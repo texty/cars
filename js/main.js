@@ -42,6 +42,119 @@ badge_control.onChange(function(change) {
     
 });
 
+regions_control.onChange(function(event){
+    updateProducers();
+    updateMakeYears();
+    updateModels();
+});
+
+producers_control.onChange(function(event){
+    var change_d = event.change;
+
+    if (change_d.checked) {
+        var query = filter_observer.getCurrentQuery();
+        query.producer = [change_d.id];
+
+        data_provider.getModelsData(query, function(err, data) {
+            if (err) throw err;
+
+            data.forEach(function(d){
+                d.label = d.model;
+                d.badge = d.n;
+            });
+
+            models_control
+                .state(change_d)
+                .items(data)
+                .update();
+
+        })
+    } else {
+        change_d.models = null;
+
+        models_control
+            .state(null)
+            .items([])
+            .update()
+    }
+
+    updateMakeYears();
+});
+
+models_control.onChange(function(event){
+    updateMakeYears();
+    var checked = event.all.filter(function(d) {return d.checked});
+    if (!checked.length) return models_control.state().models = null;
+
+    models_control.state().models = checked;
+});
+
+filter_observer.onChange(function(query) {
+    small_multiples_chart.filterRegions(query.region);
+    badge_control.query(query).update();
+
+    data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
+        console.log(arguments);
+        if (err) throw err;
+
+
+        console.log(data.by_region);
+
+        small_multiples_chart
+            .items(data.by_region)
+            .update();
+
+        total_chart.data(data.total).update();
+    });
+});
+
+
+updateMakeYears();
+
+
+
+
+
+
+data_provider.getRegionsData(function(err, regions) {
+    if (err) throw err;
+
+    var items = regions.map(function(d){
+        return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
+    });
+
+    regions_control
+        .items(items)
+        .update();
+});
+
+
+data_provider.getProducersData({}, function(err, producers) {
+    if (err) throw err;
+
+    var items = producers.map(function(d){
+        return {label: d.producer, badge: d.n, id: d.producer}
+    });
+
+    producers_control
+        .items(items)
+        .update();
+});
+
+data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
+        if (err) throw err;
+
+        total_chart
+            .data(data.total);
+        d3.select('#total_chart').call(total_chart);
+
+        small_multiples_chart
+            .items(data.by_region);
+        d3.select("#small_multiples").call(small_multiples_chart);
+});
+
+
+
 
 function updateProducers() {
     var query = filter_observer.getCurrentQuery();
@@ -78,102 +191,22 @@ function updateMakeYears() {
     })
 }
 
-data_provider.getRegionsData(function(err, regions) {
-    if (err) throw err;
+function updateModels() {
+    if (!models_control.state()) return;
 
-    var items = regions.map(function(d){
-        return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
-    });
+    var query = filter_observer.getCurrentQuery();
+    query.producer = [models_control.state().producer];
 
-    regions_control
-        .items(items)
-        .update();
-
-    regions_control.onChange(function(event){
-        updateProducers();
-        updateMakeYears();
-    });
-});
-
-
-data_provider.getProducersData({}, function(err, producers) {
-    if (err) throw err;
-
-    var items = producers.map(function(d){
-        return {label: d.producer, badge: d.n, id: d.producer}
-    });
-
-    producers_control
-        .items(items)
-        .update();
-
-    producers_control.onChange(function(event){
-        var data = event.change;
-        
-        if (data.checked) {
-            var query = filter_observer.getCurrentQuery();
-            query.producer = [data.id];
-
-            data_provider.getModelsData(query, function(err, data) {
-                if (err) throw err;
-
-                data.forEach(function(d){
-                    d.label = d.model;
-                    d.badge = d.n;
-                });
-
-                models_control
-                    .state(query.producer[0])
-                    .items(data)
-                    .update();
-
-            })
-        } else {
-            models_control
-                .state(null)
-                .items([])
-                .update()
-        }
-
-        updateMakeYears();
-    });
-});
-
-models_control.onChange(function(event){
-    updateMakeYears();
-});
-
-updateMakeYears();
-
-
-data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
+    data_provider.getModelsData(query, function(err, data) {
         if (err) throw err;
 
-        total_chart
-            .data(data.total);
-        d3.select('#total_chart').call(total_chart);
+        data.forEach(function(d){
+            d.label = d.model;
+            d.badge = d.n;
+        });
 
-        small_multiples_chart
-            .items(data.by_region);
-        d3.select("#small_multiples").call(small_multiples_chart);
-});
-
-
-filter_observer.onChange(function(query) {
-    small_multiples_chart.filterRegions(query.region);
-    badge_control.query(query).update();
-
-    data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
-        if (err) throw err;
-
-
-        console.log(data.by_region);
-
-        small_multiples_chart
-            .items(data.by_region)
+        models_control
+            .items(data)
             .update();
-
-        total_chart.data(data.total).update();
-
-    });
-});
+    })
+}
