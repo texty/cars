@@ -53,7 +53,7 @@ function badges_control() {
 
                 producers_join.exit().remove();
 
-                producers_join
+                producer_model_container
                     .selectAll("div.badge-item")
                     .on("click", function(d) {
                         dispatcher.call("change", this, {producer: d});
