@@ -49,10 +49,6 @@ function list_control() {
                 var term = normalize(this.value);
                 ul.selectAll("li.list-group-item").classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
                 ps.update();
-                //todo
-                // Це фільтрування повинно бути тільки візуальним.
-                // Тобто фільтр просто допомагає знайти потрібний елемент, але не впливає на стейт
-
             });
 
             my.update = update;

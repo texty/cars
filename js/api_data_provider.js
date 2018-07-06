@@ -98,7 +98,7 @@ var data_provider = (function() {
             if (err) return cb(err);
 
             var by_region = d3.nest()
-                .key(function(d){return d.region_code})
+                .key(function(d){return d.region})
                 .rollup(function(leaves) {
                     var filled = fillDates(leaves, dates_extent);
                     filled.forEach(function(row){
@@ -166,11 +166,11 @@ var data_provider = (function() {
     function fillRegions(by_region, regions) {
         if (!regions || !regions.length) regions = Object.keys(region_utils.REGION_BY_CODE);
 
-        regions.forEach(function(region_code){
-            var region_data = by_region.filter(function(obj){return region_code === obj.key})[0];
+        regions.forEach(function(region){
+            var region_data = by_region.filter(function(obj){return region === obj.key})[0];
             if (!region_data) {
                 region_data = {
-                    key: region_code,
+                    key: region,
                     value: fillDates([], dates_extent)
                 };
 

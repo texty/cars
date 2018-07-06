@@ -33,16 +33,25 @@ var filter_observer = (function() {
     };
 
     function generateQuery() {
-        var query = {};
+        var query = [];
 
-        Object.keys(filters).forEach(function(filter_id){
+        Object.keys(filters).forEach(function (filter_id) {
             var filter = filters[filter_id];
             if (allSelected(filter.items())) return;
-
-            query[filter_id] = filter
+            
+            var values = filter
                 .items()
-                .filter(function(d) {return d.checked})
-                .map(function (d) { return d.id});
+                .filter(function (d) {return d.checked})
+                .map(function (d) {return d.id}); 
+            
+            var filter_obj = {
+                type: "simple",
+                verb: "in",
+                field: filter_id,
+                values: values
+            };
+            
+            query.push(filter_obj)
         });
 
         return query;
