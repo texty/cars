@@ -90,7 +90,9 @@ models_control.onChange(function(event){
 });
 
 filter_observer.onChange(function(query) {
-    small_multiples_chart.filterRegions(query.filter(function(d){return d.field=="region"})[0]);
+
+    //todo filtering
+    // small_multiples_chart.filterRegions(query.filter(function(d){return d.field=="region"})[0].values);
     badge_control.query(query).update();
 
     data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {

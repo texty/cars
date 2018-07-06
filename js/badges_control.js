@@ -1,6 +1,6 @@
 function badges_control() {
 
-    var query = {}
+    var query = []
         , on_change_counter = 0
         , dispatcher = d3.dispatch("change")
         ;
@@ -70,12 +70,15 @@ function badges_control() {
     }
 
     function badgesFromQuery(query) {
-        if (!query) query = {};
+        if (!query) query = [];
 
         var result = {};
 
-        if (query.region) {
-            result.region = query.region.map(function (id) {
+        var query_region = query.filter(function(d){return d.field === "region"})[0];
+        var query_producer = query.filter(function(d){return d.field === "producer"})[0];
+
+        if (query_region) {
+            result.region = query_region.values.map(function (id) {
                 var r = region_utils.REGION_BY_CODE[id];
                 return {
                     short_name: r.short_name,
@@ -86,8 +89,8 @@ function badges_control() {
             result.region = [];
         }
 
-        if (query.producer) {
-            result.producer = query.producer.map(function(pr) {
+        if (query_producer) {
+            result.producer = query_producer.values.map(function(pr) {
                 return {name: pr, id: pr}
             })
 
