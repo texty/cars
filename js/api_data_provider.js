@@ -15,9 +15,12 @@ var data_provider = (function() {
 
 
     var getRegionsData_xhr;
-    module.getRegionsData = function(cb) {
+    module.getRegionsData = function(query, cb) {
         if (getRegionsData_xhr) getRegionsData_xhr.abort();
-        getRegionsData_xhr = d3.json(API_HOST +  "/api/regions", function(err, data){
+
+        var query_str = encodeURI(JSON.stringify(query));
+        
+        getRegionsData_xhr = cached_fetch_json(API_HOST + "/api/regions?json=" + query_str , function(err, data){
             if (err) return cb(err);
 
             data.forEach(function(row){
@@ -30,15 +33,13 @@ var data_provider = (function() {
         });
     };
 
-    var getProducersData_cache = {};
     var getProducersData_xhr;
     module.getProducersData = function(query, cb) {
         if (getProducersData_xhr) getProducersData_xhr.abort();
 
         var query_str = encodeURI(JSON.stringify(query));
-        if (getProducersData_cache[query_str]) return cb(null, getProducersData_cache[query_str]);
-        
-        getProducersData_xhr = d3.json(API_HOST +  "/api/producers?json=" + query_str, function(err, data){
+
+        getProducersData_xhr = cached_fetch_json(API_HOST +  "/api/field/producer?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
             data.forEach(function(row){
@@ -46,7 +47,6 @@ var data_provider = (function() {
                 row.id = row.producer;
             });
 
-            getProducersData_cache[query_str] = data;
             return cb(err, data);
         });
     };
@@ -56,7 +56,7 @@ var data_provider = (function() {
         if (getModelsData_xhr) getModelsData_xhr.abort();
         var query_str = encodeURI(JSON.stringify(query));
 
-        getModelsData_xhr = d3.json(API_HOST +  "/api/models?json=" + query_str, function(err, data){
+        getModelsData_xhr = cached_fetch_json(API_HOST +  "/api/field/model?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
             data.forEach(function(row){
@@ -73,7 +73,7 @@ var data_provider = (function() {
         if (getYearsData_xhr) getYearsData_xhr.abort();
         var query_str = encodeURI(JSON.stringify(query));
 
-        getYearsData_xhr = d3.json(API_HOST +  "/api/make_years?json=" + query_str, function(err, data){
+        getYearsData_xhr = cached_fetch_json(API_HOST +  "/api/field/make_year?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
             data.forEach(function(row){
@@ -86,15 +86,12 @@ var data_provider = (function() {
     };
 
     var getTimeSeriesByQueryByRegion_xhr;
-    var getTimeSeriesByQueryByRegion_cache = {};
     module.getTimeSeriesByQueryByRegion = function(query, cb) {
         if (getTimeSeriesByQueryByRegion_xhr) getTimeSeriesByQueryByRegion_xhr.abort();
 
         var query_str = encodeURI(JSON.stringify(query));
 
-        if (getTimeSeriesByQueryByRegion_cache[query_str]) return cb(null, getTimeSeriesByQueryByRegion_cache[query_str]);
-
-        getTimeSeriesByQueryByRegion_xhr = d3.json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
+        getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
             if (err) return cb(err);
 
             var by_region = d3.nest()
@@ -126,7 +123,6 @@ var data_provider = (function() {
                 by_region: by_region,
                 total: total
             };
-            getTimeSeriesByQueryByRegion_cache[query_str] = result;
             return cb(err, result);
         });
 
@@ -182,6 +178,20 @@ var data_provider = (function() {
             }
         });
     }
+
+    var xhr_cache = {};
+    function cached_fetch_json(uri, cb) {
+        if (xhr_cache[uri]) return cb(null, JSON.parse(JSON.stringify(xhr_cache[uri])));
+        
+        return d3.json(uri, function(err, data) {
+            if (err) throw err;
+            
+            xhr_cache[uri] = data;
+            return cb(err, JSON.parse(JSON.stringify(data)));
+        })
+    }
+
+    window.xhr_cache = xhr_cache;
 
     return module;
 })();

@@ -27,34 +27,41 @@ var years_control = list_control()
     .show_badges(true);
 d3.select('#years_control').call(years_control);
 
-filter_observer.addFilter(regions_control, regions_control.id());
-filter_observer.addFilter(producers_control, producers_control.id());
-filter_observer.addFilter(models_control, models_control.id());
-filter_observer.addFilter(years_control, years_control.id());
+filter_chain.addFilter({
+    component: regions_control, verb: "in", type: "simple", field: "region",
+    fetchNewData: function(query){
+        data_provider.getRegionsData(query, function(err, regions) {
+            if (err) throw err;
 
-var badge_control = badges_control();
-d3.select("#badge_control").call(badge_control);
+            var items = regions.map(function(d){
+                return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
+            });
 
-badge_control.onChange(function(change) {
-   if (change.region) regions_control.uncheck(change.region);
-   if (change.producer) producers_control.uncheck(change.producer);
-    
-    
+            regions_control
+                .items(items)
+                .update();
+        });
+    }
 });
 
-regions_control.onChange(function(event){
-    updateProducers();
-    updateMakeYears();
-    updateModels();
+filter_chain.addFilter({component: producers_control, verb: "in", type: "simple", field: "producer",
+    fetchNewData: function(query){
+        data_provider.getProducersData(query, function(err, producers) {
+            if (err) throw err;
+
+            var items = producers.map(function(d){
+                return {label: d.producer, badge: d.n, id: d.producer}
+            });
+
+            producers_control
+                .items(items)
+                .update();
+        });
+    }
 });
 
-producers_control.onChange(function(event){
-    var change_d = event.change;
-
-    if (change_d.checked) {
-        var query = filter_observer.getCurrentQuery();
-        query.producer = [change_d.id];
-
+filter_chain.addFilter({component: models_control, verb: "in", type: "simple", field: "model",
+    fetchNewData: function(query) {
         data_provider.getModelsData(query, function(err, data) {
             if (err) throw err;
 
@@ -64,41 +71,53 @@ producers_control.onChange(function(event){
             });
 
             models_control
-                .state(change_d)
                 .items(data)
                 .update();
-
         })
-    } else {
-        change_d.models = null;
-
-        models_control
-            .state(null)
-            .items([])
-            .update()
     }
-
-    updateMakeYears();
 });
 
-models_control.onChange(function(event){
-    updateMakeYears();
-    var checked = event.all.filter(function(d) {return d.checked});
-    if (!checked.length) return models_control.state().models = null;
+filter_chain.addFilter({component: years_control, verb: "in", type: "simple", field: "make_year",
+    fetchNewData: function (query) {
+        data_provider.getYearsData(query, function(err, data) {
+            if (err) throw err;
 
-    models_control.state().models = checked;
+            data.forEach(function(d){
+                d.label=d.make_year;
+                d.badge=d.n;
+                d.id=d.make_year;
+            });
+
+            years_control
+                .items(data)
+                .update();
+        });
+    }
 });
 
-filter_observer.onChange(function(query) {
+var badge_control = badges_control();
+d3.select("#badge_control").call(badge_control);
 
-    //todo filtering
-    // small_multiples_chart.filterRegions(query.filter(function(d){return d.field=="region"})[0].values);
+badge_control.onChange(function(change) {
+   if (change.region) regions_control.uncheck(change.region);
+   if (change.producer) producers_control.uncheck(change.producer);
+});
+
+filter_chain.triggerChange(-1);
+
+
+filter_chain.onChange(function(query) {
+    var region_query = query.filter(function(d){return d.field=="region"})[0];
+    if (region_query && region_query.values && region_query.values.length)
+        small_multiples_chart.filterRegions(region_query.values);
+    else
+        small_multiples_chart.filterRegions(null);
+
     badge_control.query(query).update();
 
     data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
         console.log(arguments);
         if (err) throw err;
-
 
         console.log(data.by_region);
 
@@ -108,39 +127,6 @@ filter_observer.onChange(function(query) {
 
         total_chart.data(data.total).update();
     });
-});
-
-
-updateMakeYears();
-
-
-
-
-
-
-data_provider.getRegionsData(function(err, regions) {
-    if (err) throw err;
-
-    var items = regions.map(function(d){
-        return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
-    });
-
-    regions_control
-        .items(items)
-        .update();
-});
-
-
-data_provider.getProducersData({}, function(err, producers) {
-    if (err) throw err;
-
-    var items = producers.map(function(d){
-        return {label: d.producer, badge: d.n, id: d.producer}
-    });
-
-    producers_control
-        .items(items)
-        .update();
 });
 
 data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
@@ -154,61 +140,3 @@ data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
             .items(data.by_region);
         d3.select("#small_multiples").call(small_multiples_chart);
 });
-
-
-
-
-function updateProducers() {
-    var query = filter_observer.getCurrentQuery();
-
-    data_provider.getProducersData(query, function(err, data) {
-        if (err) throw err;
-
-        data.forEach(function(d){
-            d.label = d.producer;
-            d.badge = d.n;
-        });
-
-        producers_control
-            .items(data)
-            .update();
-    })
-}
-
-function updateMakeYears() {
-    var query = filter_observer.getCurrentQuery();
-
-    data_provider.getYearsData(query, function(err, data) {
-        if (err) throw err;
-
-        data.forEach(function(d){
-            d.label=d.make_year;
-            d.badge=d.n;
-            d.id=d.make_year;
-        });
-
-        years_control
-            .items(data)
-            .update();
-    })
-}
-
-function updateModels() {
-    if (!models_control.state()) return;
-
-    var query = filter_observer.getCurrentQuery();
-    query.producer = [models_control.state().producer];
-
-    data_provider.getModelsData(query, function(err, data) {
-        if (err) throw err;
-
-        data.forEach(function(d){
-            d.label = d.model;
-            d.badge = d.n;
-        });
-
-        models_control
-            .items(data)
-            .update();
-    })
-}

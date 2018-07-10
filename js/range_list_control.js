@@ -1,5 +1,7 @@
-function list_control() {
+function range_list_control() {
 
+    //todo TRASH HERE REWRITE COMPLETELY
+    
     var container
         , context = {
             placeholder: "",
