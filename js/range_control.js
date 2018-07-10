@@ -5,14 +5,8 @@ function range_list_control() {
     var container
         , context = {
             placeholder: "",
-            items: [],
-            show_badges: false,
-            id: null,
-            order: true,
-            state: null
+            id: null
         }
-        , badgeFormat
-        , ps
         , filter_term = "" //todo only internal
         , item_enter
         , dispatcher = d3.dispatch("change")
@@ -132,12 +126,6 @@ function range_list_control() {
 
     }
 
-    my.items = function(value) {
-        if (!arguments.length) return context.items;
-        context.items = value;
-        return my;
-    };
-
     my.placeholder = function(value) {
         if (!arguments.length) return context.placeholder;
         context.placeholder = value;
@@ -180,13 +168,5 @@ function range_list_control() {
             .map(function(d){return d.id})
     };
     
-    function normalize(str) {
-        if (!str) return "";
-        return str.trim().toUpperCase().replace(/\s+/g, " ");
-    }
-
-    function noop(){}
-
-
     return my;
 }

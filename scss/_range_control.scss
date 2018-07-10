@@ -1,0 +1,68 @@
+.range-control {
+  width: 100%;
+  border: 1px solid rgba($blue, 0.125);
+
+  span.placeholder {
+    display: inline-block;
+    color: grey;
+
+    width: 100%;
+
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba($blue, 0.125);
+    border-radius: 2px;
+
+    padding: 12px 20px 12px 12px;
+  }
+
+  .control-content {
+    height: 300px;
+
+
+
+
+
+
+  }
+
+  .list-group-item {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+
+    border: 1px solid rgba($blue, 0.125);
+    border-radius: 0;
+
+    &:first-child {
+      border: none;
+    }
+
+    label.form-check-label {
+      width: 100%;
+    }
+
+    .badge {
+      float: right;
+    }
+  }
+
+  .ul-container {
+    height: 300px;
+    position: relative;
+  }
+
+  /* to make scrollbars always visible */
+  .always-visible.ps > .ps__rail-y {
+    opacity: 0.6;
+  }
+
+
+  //Щоб бути вище ніж елемент списку на ховері
+  .ps > .ps__rail-y {
+    z-index: 2;
+  }
+
+  .badge-primary {
+    background-color: $orange;
+  }
+
+}

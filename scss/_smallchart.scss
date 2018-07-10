@@ -1,5 +1,5 @@
 $area_color: $blue;
-$path_color: #85a561;
+$path_color: $blue;
 
 svg.smallchart {
 
@@ -29,6 +29,7 @@ svg.smallchart {
   }
 
   .area.main {
+    //display: none;
     fill-opacity: 1;
     fill: $area_color;
   }

@@ -3,97 +3,12 @@ var total_chart = smallchart()
 
 var small_multiples_chart = small_multiples();
 
-var regions_control = list_control()
-    .id("region")
-    .placeholder("Введіть область")
-    .show_badges(true);
-d3.select('#regions_control').call(regions_control);
-
-var producers_control = list_control()
-    .id("producer")
-    .placeholder("Введіть марку")
-    .show_badges(true);
-d3.select('#producers_control').call(producers_control);
-
-var models_control = list_control()
-    .id("model")
-    .placeholder("Введіть модель")
-    .show_badges(true);
-d3.select('#models_control').call(models_control);
-
-var years_control = list_control()
-    .id("make_year")
-    .placeholder("Введіть рік випуску")
-    .show_badges(true);
-d3.select('#years_control').call(years_control);
-
-filter_chain.addFilter({
-    component: regions_control, verb: "in", type: "simple", field: "region",
-    fetchNewData: function(query){
-        data_provider.getRegionsData(query, function(err, regions) {
-            if (err) throw err;
-
-            var items = regions.map(function(d){
-                return {label: d.name.replace(" область", ""), badge: d.n, id: d.id}
-            });
-
-            regions_control
-                .items(items)
-                .update();
-        });
-    }
-});
-
-filter_chain.addFilter({component: producers_control, verb: "in", type: "simple", field: "producer",
-    fetchNewData: function(query){
-        data_provider.getProducersData(query, function(err, producers) {
-            if (err) throw err;
-
-            var items = producers.map(function(d){
-                return {label: d.producer, badge: d.n, id: d.producer}
-            });
-
-            producers_control
-                .items(items)
-                .update();
-        });
-    }
-});
-
-filter_chain.addFilter({component: models_control, verb: "in", type: "simple", field: "model",
-    fetchNewData: function(query) {
-        data_provider.getModelsData(query, function(err, data) {
-            if (err) throw err;
-
-            data.forEach(function(d){
-                d.label = d.model;
-                d.badge = d.n;
-            });
-
-            models_control
-                .items(data)
-                .update();
-        })
-    }
-});
-
-filter_chain.addFilter({component: years_control, verb: "in", type: "simple", field: "make_year",
-    fetchNewData: function (query) {
-        data_provider.getYearsData(query, function(err, data) {
-            if (err) throw err;
-
-            data.forEach(function(d){
-                d.label=d.make_year;
-                d.badge=d.n;
-                d.id=d.make_year;
-            });
-
-            years_control
-                .items(data)
-                .update();
-        });
-    }
-});
+addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
+addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
+addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
+addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
+addListControl(filter_chain, "capacity", "Введіть об'єм двигуна", data_provider.getFieldData);
 
 var badge_control = badges_control();
 d3.select("#badge_control").call(badge_control);
@@ -140,3 +55,32 @@ data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
             .items(data.by_region);
         d3.select("#small_multiples").call(small_multiples_chart);
 });
+
+
+function addListControl(filter_chain, field, placeholder, getFieldData) {
+    var element = d3.select("#filter_chain")
+        .append("div")
+        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3")
+        .append("div")
+        .attr("id", field)
+        .attr("class", "chain_control");
+
+    var control = list_control()
+        .id(field)
+        .placeholder(placeholder)
+        .show_badges(true);
+    
+    element.call(control);
+    
+    filter_chain.addFilter({component: control, verb: "in", type: "simple", field: field,
+        fetchNewData: function (query) {
+            getFieldData(field, query, function(err, data) {
+                if (err) throw err;
+
+                control
+                    .items(data)
+                    .update();
+            });
+        }
+    })
+}

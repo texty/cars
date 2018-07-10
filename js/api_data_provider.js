@@ -14,8 +14,31 @@ var data_provider = (function() {
     });
 
 
+
+    var getFieldData_xhr = {};
+    module.getFieldData = function(field, query, cb) {
+        if (getFieldData_xhr[field]) getFieldData_xhr[field].abort();
+
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getFieldData_xhr[field] = cached_fetch_json(API_HOST + "/api/field/" + field + "?json=" + query_str , function(err, data){
+            if (err) return cb(err);
+
+            data.forEach(function(row){
+                row.n = +row.n;
+                row.id = row[field];
+                row.label = row.id;
+                row.badge = +row.n;
+            });
+
+            return cb(err, data);
+        });
+    };
+
+
     var getRegionsData_xhr;
-    module.getRegionsData = function(query, cb) {
+    module.getRegionsData = function(field, query, cb) {
+        //todo ignoring field parameter. We need it only for shared interface
         if (getRegionsData_xhr) getRegionsData_xhr.abort();
 
         var query_str = encodeURI(JSON.stringify(query));
@@ -26,64 +49,15 @@ var data_provider = (function() {
             data.forEach(function(row){
                 row.n = +row.n;
                 row.id = row.code;
+                row.label = row.short_name;
+                row.badge = +row.n;
                 delete row.code;
             });
 
             return cb(err, data);
         });
     };
-
-    var getProducersData_xhr;
-    module.getProducersData = function(query, cb) {
-        if (getProducersData_xhr) getProducersData_xhr.abort();
-
-        var query_str = encodeURI(JSON.stringify(query));
-
-        getProducersData_xhr = cached_fetch_json(API_HOST +  "/api/field/producer?json=" + query_str, function(err, data){
-            if (err) return cb(err);
-
-            data.forEach(function(row){
-                row.n = +row.n;
-                row.id = row.producer;
-            });
-
-            return cb(err, data);
-        });
-    };
-
-    var getModelsData_xhr;
-    module.getModelsData = function(query, cb) {
-        if (getModelsData_xhr) getModelsData_xhr.abort();
-        var query_str = encodeURI(JSON.stringify(query));
-
-        getModelsData_xhr = cached_fetch_json(API_HOST +  "/api/field/model?json=" + query_str, function(err, data){
-            if (err) return cb(err);
-
-            data.forEach(function(row){
-                row.n = +row.n;
-                row.id = row.model;
-            });
-
-            return cb(err, data);
-        });
-    };
-
-    var getYearsData_xhr;
-    module.getYearsData = function(query, cb) {
-        if (getYearsData_xhr) getYearsData_xhr.abort();
-        var query_str = encodeURI(JSON.stringify(query));
-
-        getYearsData_xhr = cached_fetch_json(API_HOST +  "/api/field/make_year?json=" + query_str, function(err, data){
-            if (err) return cb(err);
-
-            data.forEach(function(row){
-                row.n = +row.n;
-                row.id = row.make_year;
-            });
-
-            return cb(err, data);
-        });
-    };
+    
 
     var getTimeSeriesByQueryByRegion_xhr;
     module.getTimeSeriesByQueryByRegion = function(query, cb) {

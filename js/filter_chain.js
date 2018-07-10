@@ -29,21 +29,22 @@ var filter_chain = (function() {
         if (!arguments.length) return;
         
         filters.push(filter_object);
-        var position = filters.length - 1;
+        filter_object.position = filters.length - 1;
 
-        filter_object.component.onChange(function(){return onChange(position)});
+        filter_object.component.onChange(function(){return onChange(filter_object.position)});
 
         return module;
     };
 
-
-    //todo prototype
     module.removeFilter = function(idx) {
         if (!arguments.length) return;
         filters.splice(idx, 1);
+        filters.forEach(function(filter_object, index) {
+            filter_object.position = index;
+        });
+
         return module;
     };
-
 
 
     module.onChange = function(value) {
@@ -91,11 +92,16 @@ var filter_chain = (function() {
                     values: data
                 }
             } else if (filter_object.verb === "between") {
-                //todo
+                var extent = filter_object.component.selectedExtent();
 
+                if (!extent.length) return null;
 
-                throw "Between filter not implemented";
-
+                return {
+                    type: "simple",
+                    verb: "between",
+                    field: filter_object.field,
+                    values: extent
+                }
 
             } else throw "filter verb is unknown";
 
