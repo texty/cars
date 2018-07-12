@@ -1,124 +1,142 @@
-function range_list_control() {
-
-    //todo TRASH HERE REWRITE COMPLETELY
+function range_control() {
     
     var container
         , context = {
             placeholder: "",
-            id: null
+            histo_data: {empty:null, main:[]},
+            id: "",
+            varName: ""
+
+
+
+
         }
-        , filter_term = "" //todo only internal
-        , item_enter
         , dispatcher = d3.dispatch("change")
         , on_change_counter = 0
-        // , ul_container
+        , minX, minY, maxX, maxY
+        , main_area
         ;
 
     function my(selection) {
         selection.each(function(d) {
+            context.varName = context.id;
+
             var container = d3.select(this)
                 .append("div")
-                .attr("class", "list-control");
+                .attr("class", "range-control");
 
+            var header = container
+                .append("span")
+                .attr("class", "placeholder")
+                .text(context.placeholder);
 
-            var searchbox = container
+            var svg = container
+                .append("svg")
+                .attr("width", "100%")
+                .attr("data-min-height", "100")
+                .attr("data-aspect-ration", "0.5");
+
+            var w = svg.node().getBoundingClientRect().width;
+            var mh = +svg.attr("data-min-height");
+            var h = Math.max(mh, w * (+svg.attr("data-aspect-ratio")));
+
+            var margin = {top: 5, right: 15, bottom: 15, left: 20}
+                , width = w - margin.left - margin.right
+                , height = h - margin.top - margin.bottom
+                , g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                ;
+            svg.attr("height", h);
+
+            var x = d3.scaleLinear()
+                .range([0, width]);
+
+            var y = d3.scaleLinear()
+                .range([height, 0]);
+            //
+            // var line = d3.line()
+            //     .x(function(d) { return x(d.monday)})
+            //     .y(function(d) { return y(d[varName])})
+            //     .curve(d3.curveStepAfter);
+
+            var area = d3.area()
+                .x(function(d) {return x(d[context.varName])})
+                .y0(y(0))
+                .y1(function(d) {return y(d.n)})
+                .curve(d3.curveStepAfter);
+
+            // x.domain(d3.extent(context.histo_data, function(d) {return d[varName]}));
+
+            // if (!minY) minY = 0;
+            // if (!maxY) maxY = d3.max(context.histo_data, function(d) {return d.n});
+
+            // if (!minValueY) minValueY = minY;
+            // if (!maxValueY) maxValueY = maxY;
+
+            y.domain([minY, maxY]);
+
+            var xAxis = d3.axisBottom(x)
+                .ticks(4)
+                .tickSizeOuter(0)
+                .tickSizeInner(-height)
+                .tickPadding(5)
+                .tickFormat(d3.format("d"));
+
+            var yAxis = d3.axisLeft(y)
+                .ticks(3)
+                .tickSizeOuter(0)
+                .tickSizeInner(-width)
+                .tickPadding(5);
+
+            // if (yFormat) yAxis.tickFormat(yFormat);
+            // if (yTickValues) yAxis.tickValues(yTickValues);
+            // if (yTicks) yAxis.ticks(yTicks);
+
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            g.append("g")
+                .attr("class", "axis axis--y")
+                .call(yAxis);
+
+            main_area = g.append("path")
+                .attr("class", "area main");
+
+            var label = container
+                .append("label")
+                .attr("class", "form-check-label d-flex justify-content-between align-items-center");
+
+            var empty_checkbox = label
                 .append("input")
-                .attr("type", "text")
-                .attr("name", "search")
-                .attr("class", "searchbox")
-                .attr("placeholder", context.placeholder);
+                .attr("type", "checkbox")
+                .attr("class", "form-check-input")
+                .attr("value", "");
 
-            var ul_container = container
-                .append("div")
-                .attr("class", "ul-container always-visible");
+            var check_text = label
+                .append("span")
+                .attr("class", "check-text")
+                .text(function(d){return "Показувати пусті"});
 
-            var ul = ul_container
-                .append("ul")
-                .attr("class", "list-group form-check");
-
-            var ps = new PerfectScrollbar(ul_container.node(), {
-                suppressScrollX: true,
-                minScrollbarLength: 20
-            });
-
-            searchbox.on("change input", function(){
-                var term = normalize(this.value);
-                ul.selectAll("li.list-group-item").classed("hidden", function(d) {return normalize(d.label).indexOf(term) < 0});
-                ps.update();
-            });
 
             my.update = update;
-            update();
-
-            my.uncheck = function(value) {
-                ul.selectAll("li.list-group-item")
-                    .select("input")
-                    .filter(function(d){return d.id === value.id})
-                    .node().click();
-            };
 
             function update() {
-                var item_join_selection = ul
-                    .selectAll("li.list-group-item")
-                    .data(context.items, function(d) {return d.id;});
+                if (!minY) minY = 0;
+                maxY = d3.max(context.histo_data.main, function(d) {return d.n});
+                x.domain(d3.extent(context.histo_data.main, function(d) {return d[context.varName]}));
+                y.domain([minY, maxY]);
 
-                // UPDATE
-                // зараз це не треба, але може буде колись
-                // item_join_selection
-                //     .selectAll("label.form-check-label")
+                g.select("g.axis.axis--y").call(yAxis);
+                g.select("g.axis.axis--x").call(xAxis);
 
-                // EXIT
-                item_join_selection.exit().remove();
+                main_area
+                    .datum(context.histo_data.main)
+                    .transition()
+                    .duration(500)
+                    .attr("d", area);
 
-
-                item_enter = item_join_selection.enter() //
-                    .append("li")
-                    .attr("class", "list-group-item d-flex justify-content-between align-items-center")
-                    .on("change", function(d){
-                        d.checked = d3.event.target.checked;
-                        dispatcher.call("change", this, {change: d, all: context.items});
-                    });
-
-                var label = item_enter
-                    .append("label")
-                    .attr("class", "form-check-label d-flex justify-content-between align-items-center");
-
-                var checkbox = label
-                    .append("input")
-                    .attr("type", "checkbox")
-                    .attr("class", "form-check-input")
-                    .attr("value", "");
-
-                var check_text = label
-                    .append("span")
-                    .attr("class", "check-text")
-                    .text(function(d){return d.label});
-
-                // ENTER + UPDATE
-                var item_merged_selection = item_enter.merge(item_join_selection);
-
-                item_merged_selection
-                    .select("input")
-                    .each(function(d){
-                       d.checked = this.checked;
-                    });
-
-                if (context.show_badges) {
-                    item_enter
-                        .select("label.form-check-label")
-                        .append("span")
-                        .attr("class", "badge badge-primary badge-pill");
-
-                    item_merged_selection
-                        .select("span.badge")
-                        .text(function(d){
-                            return d.badge
-                        });
-                }
-
-                if (context.order) item_merged_selection.order();
-                
-                ps.update();
+                check_text.text("Показувати пусті (" + (context.histo_data.empty ? context.histo_data.empty.n : 0) + ")");
 
                 return my;
             }
@@ -132,41 +150,28 @@ function range_list_control() {
         return my;
     };
 
-    my.show_badges = function(value) {
-        if (!arguments.length) return context.show_badges;
-        context.show_badges = value;
-        return my;
-    };
-
     my.id = function(value) {
         if (!arguments.length) return context.id;
         context.id = value;
         return my;
     };
 
-    my.order = function(value) {
-        if (!arguments.length) return context.order;
-        context.order = value;
+    my.histo_data = function(value) {
+        if (!arguments.length) return context.histo_data;
+        context.histo_data = value;
         return my;
     };
 
-    my.state = function(value) {
-        if (!arguments.length) return context.state;
-        context.state = value;
-        return my;
+    my.selectedExtent = function() {
+        if (!context.histo_data.main.length) return [];
+        return d3.extent(context.histo_data.main, function(d){return d[context.varName]});
     };
-    
+
     my.onChange = function(value) {
         if (!arguments.length) return;
         dispatcher.on("change." + ++on_change_counter, value);
         return my;
     };
 
-    my.selected = function() {
-        return context.items
-            .filter(function(d){return d.checked})
-            .map(function(d){return d.id})
-    };
-    
     return my;
 }

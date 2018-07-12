@@ -22,7 +22,7 @@ var data_provider = (function() {
         var query_str = encodeURI(JSON.stringify(query));
 
         getFieldData_xhr[field] = cached_fetch_json(API_HOST + "/api/field/" + field + "?json=" + query_str , function(err, data){
-            if (err) return cb(err);
+            if (err) throw err;
 
             data.forEach(function(row){
                 row.n = +row.n;
@@ -35,6 +35,29 @@ var data_provider = (function() {
         });
     };
 
+    var getFieldHisto_xhr = {};
+    module.getFieldHisto = function(field, query, cb) {
+        if (getFieldHisto_xhr[field]) getFieldHisto_xhr[field].abort();
+
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getFieldHisto_xhr[field] = cached_fetch_json(API_HOST + "/api/histo/" + field + "?json=" + query_str , function(err, data){
+            if (err) throw err;
+            console.log(data)
+
+            var result = {};
+            // debugger;
+
+            if (data.length && data[0][field] === null) {
+                result.empty = data[0];
+                data = data.slice(1);
+            }
+
+            result.main = fillWithZeros(data, field, 100);
+            console.log(result);
+            return cb(err, result);
+        });
+    };
 
     var getRegionsData_xhr;
     module.getRegionsData = function(field, query, cb) {
@@ -44,7 +67,7 @@ var data_provider = (function() {
         var query_str = encodeURI(JSON.stringify(query));
         
         getRegionsData_xhr = cached_fetch_json(API_HOST + "/api/regions?json=" + query_str , function(err, data){
-            if (err) return cb(err);
+            if (err) throw err;
 
             data.forEach(function(row){
                 row.n = +row.n;
@@ -66,7 +89,7 @@ var data_provider = (function() {
         var query_str = encodeURI(JSON.stringify(query));
 
         getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
-            if (err) return cb(err);
+            if (err) throw err;
 
             var by_region = d3.nest()
                 .key(function(d){return d.region})
@@ -151,6 +174,28 @@ var data_provider = (function() {
                 by_region.push(region_data);
             }
         });
+    }
+
+    function fillWithZeros(ordered_data, varName, step) {
+        var extent = d3.extent(ordered_data, function(d){return d[varName]});
+// debugger;
+        var repaired = [];
+        var idx = 0;
+
+        var val;
+
+        for (val = extent[0]; val <= extent[1]; val += step) {
+            if (ordered_data[idx][varName] === val) {
+                repaired.push(ordered_data[idx]);
+                idx++;
+            } else {
+                var obj = {n: 0};
+                obj[varName] = val;
+                repaired.push(obj);
+            }
+        }
+
+        return repaired;
     }
 
     var xhr_cache = {};

@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/perfect-scrollbar.css">
     <link rel="stylesheet" href="css/application.css" type="text/css">
+    <link rel="stylesheet" href="css/ion.rangeSlider.css" type="text/css">
+    <link rel="stylesheet" href="css/ion.rangeSlider.skinModern.css" type="text/css">
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,800,italic&subset=cyrillic,latin' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
@@ -115,9 +117,11 @@
     </div>
 
     <div class="row justify-content-center" style="margin-top: 5em;">
+
         <div class="col-12 col-md-8 col-lg-6">
+        <input type="text" id="example_id" name="example_name" value="" />
             <p>Вперше авто потрапляє в реєстр після того, як його купують і реєструють. Далі у реєстрі відображаються усі зміни, які з ним відбуваються: новий власник, кузов, номер.
-                В оприлюднених даних немає персональної інформації, але є характеристики автомобіля, дата народження та унікальний ідентифікатор власника. Наш веб-аплікація дозволяє побудувати близько 3 млн графіків. Досліджуйте автомобільний ринок країни, використовуючи фільтри.
+                В оприлюднених даних немає персональної інформації, але є характеристики автомобіля, дата народження та унікальний ідентифікатор власника. Наш веб-аплікація дозволяє побудувати мільйони графіків. Досліджуйте автомобільний ринок країни, використовуючи фільтри.
             </p>
             <p>В цьому реєстрі багато цікавого: наприклад, як змінювався автомобільний ринок. Або те, що українці майже не реєструють, а отже і не купують (на українських номерах) автомобілі, старші за вісім років. Ще з цікавого: у 2017 році поціновувачі антикваріату  зареєстрували декілька раритетних Opel, вироблених аж на початку 1930х. Це найстаріші автомобілі, згадані у реєстрі за 2017 рік.
             </p>
@@ -159,6 +163,7 @@
 <!--<script src="lib/handlebars.min.js"></script>-->
 <script src="lib/moment.min.js"></script>
 <script src="lib/perfect-scrollbar.min.js"></script>
+<script src="lib/ion.rangeSlider.min.js"></script>
 
 <script src="js/region_utils.js"></script>
 <script src="js/data_provider_utils.js"></script>
@@ -172,6 +177,14 @@
 <script src="js/badges_control.js"></script>
 <script src="js/main.js"></script>
 <!--<script src="lib/d3.layout.cloud.js"></script>-->
+<script>
+    $("#example_id").ionRangeSlider({
+        type: "double",
+        min: 1000000,
+        max: 2000000,
+        grid: true
+    });
 
+</script>
 </body>
 </html>

@@ -4,11 +4,13 @@ var total_chart = smallchart()
 var small_multiples_chart = small_multiples();
 
 addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
 addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
 addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
 addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
 addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
-addListControl(filter_chain, "capacity", "Введіть об'єм двигуна", data_provider.getFieldData);
+addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getFieldHisto);
+addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getFieldHisto);
 
 var badge_control = badges_control();
 d3.select("#badge_control").call(badge_control);
@@ -79,6 +81,33 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
 
                 control
                     .items(data)
+                    .update();
+            });
+        }
+    })
+}
+
+function addRangeControl(filter_chain, field, placeholder, getFieldData) {
+    var element = d3.select("#filter_chain")
+        .append("div")
+        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3")
+        .append("div")
+        .attr("id", field)
+        .attr("class", "chain_control");
+
+    var control = range_control()
+        .id(field)
+        .placeholder(placeholder);
+
+    element.call(control);
+
+    filter_chain.addFilter({component: control, verb: "between", type: "simple", field: field,
+        fetchNewData: function (query) {
+            getFieldData(field, query, function(err, data) {
+                if (err) throw err;
+
+                control
+                    .histo_data(data)
                     .update();
             });
         }

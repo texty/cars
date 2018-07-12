@@ -64,8 +64,7 @@ svg.smallchart {
 
 .range-control {
   width: 100%;
-  border: 1px solid rgba(44, 104, 250, 0.125);
-  /* to make scrollbars always visible */ }
+  border: 1px solid rgba(44, 104, 250, 0.125); }
   .range-control span.placeholder {
     display: inline-block;
     color: grey;
@@ -76,26 +75,25 @@ svg.smallchart {
     padding: 12px 20px 12px 12px; }
   .range-control .control-content {
     height: 300px; }
-  .range-control .list-group-item {
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
-    border: 1px solid rgba(44, 104, 250, 0.125);
-    border-radius: 0; }
-    .range-control .list-group-item:first-child {
-      border: none; }
-    .range-control .list-group-item label.form-check-label {
-      width: 100%; }
-    .range-control .list-group-item .badge {
-      float: right; }
-  .range-control .ul-container {
-    height: 300px;
-    position: relative; }
-  .range-control .always-visible.ps > .ps__rail-y {
-    opacity: 0.6; }
-  .range-control .ps > .ps__rail-y {
-    z-index: 2; }
-  .range-control .badge-primary {
-    background-color: #FAA12D; }
+  .range-control svg {
+    shape-rendering: crispEdges;
+    overflow: visible; }
+    .range-control svg .axis--x path {
+      /*display: none;*/ }
+    .range-control svg .axis path {
+      opacity: .1;
+      stroke-width: 1; }
+    .range-control svg .tick line {
+      opacity: .1;
+      stroke-width: 1;
+      display: none; }
+    .range-control svg .line.main {
+      display: none;
+      fill: none;
+      stroke: #2c68fa; }
+    .range-control svg .area.main {
+      fill-opacity: 1;
+      fill: #2c68fa; }
 
 .small_multiples_item {
   display: inline-block; }
