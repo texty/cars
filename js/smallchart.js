@@ -13,13 +13,15 @@ function smallchart() {
         })()
         , yTickValues
         , yTicks
+        , xTicks = 10
         , showTips
         , x
 
         , minValueY
         , maxValueY
         , fixed_y_axis
-
+        , formatMonth = d3.timeFormat("%b")
+        , formatYear = d3.timeFormat("%Y")
         ;
 
     function my(selection) {
@@ -67,11 +69,10 @@ function smallchart() {
             y.domain([minY, maxY]);
 
             var xAxis = d3.axisBottom(x)
-                .ticks(4)
-                .tickSizeOuter(0)
+                .tickSizeOuter(10)
                 .tickSizeInner(-height)
                 .tickPadding(5)
-                // .tickFormat(d3.format("d"));
+                .tickFormat(multiFormat);
 
             var yAxis = d3.axisLeft(y)
                 .ticks(3)
@@ -82,6 +83,7 @@ function smallchart() {
             if (yFormat) yAxis.tickFormat(yFormat);
             if (yTickValues) yAxis.tickValues(yTickValues);
             if (yTicks) yAxis.ticks(yTicks);
+            if (xTicks) xAxis.ticks(xTicks);
 
             g.append("g")
                 .attr("class", "axis axis--x")
@@ -170,29 +172,17 @@ function smallchart() {
         });
     }
 
+
+    function multiFormat(date) {
+        return (d3.timeYear(date) < date ? formatMonth : formatYear)(date);
+    }
+
     my.data = function(value) {
         if (!arguments.length) return data;
         data = value;
         return my;
     };
 
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     my.varName = function(value) {
         if (!arguments.length) return varName;
         varName = value;
@@ -238,6 +228,12 @@ function smallchart() {
     my.yTicks = function(value) {
         if (!arguments.length) return yTicks;
         yTicks = value;
+        return my;
+    };
+
+    my.xTicks = function(value) {
+        if (!arguments.length) return xTicks;
+        xTicks = value;
         return my;
     };
 

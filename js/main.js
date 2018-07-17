@@ -1,5 +1,25 @@
+d3.timeFormatDefaultLocale({
+    "decimal": ".",
+    "thousands": " ",
+    "grouping": [3],
+    "currency": ["грн", ""],
+    "dateTime": "%a %b %e %X %Y",
+    "date": "%d.%m.%Y",
+    "time": "%H:%M:%S",
+    "periods": ["AM", "PM"],
+    "days": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+    "shortDays": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+    "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+    "shortMonths": ["січ", "лют", "бер", "кві", "тра", "чер", "лип", "сер", "вер", "жов", "лис", "гру"]
+});
+
+
+
+
+
 var total_chart = smallchart()
-    .varName("n");
+    .varName("n")
+    .xTicks(10);
 
 var small_multiples_chart = small_multiples();
 
@@ -9,8 +29,8 @@ addListControl(filter_chain, "fuel", "Оберіть тип палива", data_
 addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
 addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
 addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
-addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getFieldHisto);
-addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getFieldHisto);
+addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getExtentData);
+addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getExtentData);
 
 var badge_control = badges_control();
 d3.select("#badge_control").call(badge_control);
@@ -46,7 +66,7 @@ filter_chain.onChange(function(query) {
     });
 });
 
-data_provider.getTimeSeriesByQueryByRegion({}, function(err, data ){
+data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
         if (err) throw err;
 
         total_chart
@@ -97,7 +117,9 @@ function addRangeControl(filter_chain, field, placeholder, getFieldData) {
 
     var control = range_control()
         .id(field)
-        .placeholder(placeholder);
+        .placeholder(placeholder)
+        .prefix("кг ")
+        .step(50);
 
     element.call(control);
 
@@ -107,7 +129,9 @@ function addRangeControl(filter_chain, field, placeholder, getFieldData) {
                 if (err) throw err;
 
                 control
-                    .histo_data(data)
+                    .domain([data.min, data.max])
+                    .empty_count(data.empty)
+                    .total_count(data.total)
                     .update();
             });
         }

@@ -35,6 +35,7 @@ function small_multiples() {
                     this.__chart__ = smallchart()
                         .data(d.timeseries)
                         .varName("n")
+                        .xTicks(8)
                         .yTicks(2);
 
                     d3.select(this).select("svg").call(this.__chart__);

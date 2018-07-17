@@ -13,17 +13,15 @@ svg.smallchart {
     /*display: none;*/ }
   svg.smallchart .axis path {
     opacity: .1;
-    stroke-width: 1;
-    display: none; }
+    stroke-width: 1; }
   svg.smallchart .tick line {
     opacity: .1;
-    stroke-width: 1;
-    display: none; }
+    stroke-width: 1; }
   svg.smallchart .line.main {
-    display: none;
     fill: none;
     stroke: #2c68fa; }
   svg.smallchart .area.main {
+    display: none;
     fill-opacity: 1;
     fill: #2c68fa; }
 

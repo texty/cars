@@ -5,7 +5,7 @@ var data_provider = (function() {
     // const API_HOST = "http://api-x32.texty.org.ua";
 
     // Повинні бути понеділками!!!!
-    const dates_extent = ['2017-01-02', '2018-03-05'];
+    const dates_extent = ['2016-12-26', '2018-03-05'];
     // const dates_extent = ['2017-01-03', '2018-03-06'];
 
     Object.keys(region_utils.REGION_BY_CODE).forEach(function(code) {
@@ -35,26 +35,18 @@ var data_provider = (function() {
         });
     };
 
-    var getFieldHisto_xhr = {};
-    module.getFieldHisto = function(field, query, cb) {
-        if (getFieldHisto_xhr[field]) getFieldHisto_xhr[field].abort();
+    var getExtentData_xhr = {};
+    module.getExtentData = function(field, query, cb) {
+        if (getExtentData_xhr[field]) getExtentData_xhr[field].abort();
 
         var query_str = encodeURI(JSON.stringify(query));
 
-        getFieldHisto_xhr[field] = cached_fetch_json(API_HOST + "/api/histo/" + field + "?json=" + query_str , function(err, data){
+        getExtentData_xhr[field] = cached_fetch_json(API_HOST + "/api/extent/" + field + "?json=" + query_str , function(err, data){
             if (err) throw err;
-            console.log(data)
-
-            var result = {};
-            // debugger;
-
-            if (data.length && data[0][field] === null) {
-                result.empty = data[0];
-                data = data.slice(1);
-            }
-
-            result.main = fillWithZeros(data, field, 100);
-            console.log(result);
+            
+            var result = data[0];
+            result.empty = result.total - result.nonempty;
+            
             return cb(err, result);
         });
     };

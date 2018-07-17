@@ -93,14 +93,15 @@ var filter_chain = (function() {
                 }
             } else if (filter_object.verb === "between") {
                 var extent = filter_object.component.selectedExtent();
+                var show_empty = filter_object.component.show_empty();
 
-                if (!extent.length) return null;
+                if (!extent.length && show_empty) return null;
 
                 return {
                     type: "simple",
                     verb: "between",
                     field: filter_object.field,
-                    values: extent
+                    values: {extent: extent, show_empty: show_empty}
                 }
 
             } else throw "filter verb is unknown";

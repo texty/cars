@@ -5,16 +5,19 @@ function range_control() {
             placeholder: "",
             histo_data: {empty:null, main:[]},
             id: "",
-            varName: ""
-
-
-
-
+            varName: "",
+            step: 1,
+            prefix: "",
+            domain: [0, 1000],
+            total_count: 0,
+            empty_count: 0,
+            selectedExtent: [],
+            show_empty: true
         }
+        , slider
         , dispatcher = d3.dispatch("change")
         , on_change_counter = 0
-        , minX, minY, maxX, maxY
-        , main_area
+        , input
         ;
 
     function my(selection) {
@@ -30,78 +33,30 @@ function range_control() {
                 .attr("class", "placeholder")
                 .text(context.placeholder);
 
-            var svg = container
-                .append("svg")
-                .attr("width", "100%")
-                .attr("data-min-height", "100")
-                .attr("data-aspect-ration", "0.5");
+            input = container
+                .append("input")
+                .attr("type", "text")
+                .attr("name", "input_name")
+                .attr("value", "");
 
-            var w = svg.node().getBoundingClientRect().width;
-            var mh = +svg.attr("data-min-height");
-            var h = Math.max(mh, w * (+svg.attr("data-aspect-ratio")));
+            $(input.node()).ionRangeSlider({
+                type: "double",
+                grid: true,
+                min: context.domain[0],
+                max: context.domain[1],
+                from: context.domain[0],
+                to: context.domain[1],
+                prefix: context.prefix,
+                step: context.step,
+                prettify_enabled: true,
 
-            var margin = {top: 5, right: 15, bottom: 15, left: 20}
-                , width = w - margin.left - margin.right
-                , height = h - margin.top - margin.bottom
-                , g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                ;
-            svg.attr("height", h);
+                onFinish: function(data) {
+                    context.selectedExtent = [data.from, data.to];
+                    dispatcher.call("change", this, {extent: context.selectedExtent, show_empty: context.show_empty});
+                }
+            });
 
-            var x = d3.scaleLinear()
-                .range([0, width]);
-
-            var y = d3.scaleLinear()
-                .range([height, 0]);
-            //
-            // var line = d3.line()
-            //     .x(function(d) { return x(d.monday)})
-            //     .y(function(d) { return y(d[varName])})
-            //     .curve(d3.curveStepAfter);
-
-            var area = d3.area()
-                .x(function(d) {return x(d[context.varName])})
-                .y0(y(0))
-                .y1(function(d) {return y(d.n)})
-                .curve(d3.curveStepAfter);
-
-            // x.domain(d3.extent(context.histo_data, function(d) {return d[varName]}));
-
-            // if (!minY) minY = 0;
-            // if (!maxY) maxY = d3.max(context.histo_data, function(d) {return d.n});
-
-            // if (!minValueY) minValueY = minY;
-            // if (!maxValueY) maxValueY = maxY;
-
-            y.domain([minY, maxY]);
-
-            var xAxis = d3.axisBottom(x)
-                .ticks(4)
-                .tickSizeOuter(0)
-                .tickSizeInner(-height)
-                .tickPadding(5)
-                .tickFormat(d3.format("d"));
-
-            var yAxis = d3.axisLeft(y)
-                .ticks(3)
-                .tickSizeOuter(0)
-                .tickSizeInner(-width)
-                .tickPadding(5);
-
-            // if (yFormat) yAxis.tickFormat(yFormat);
-            // if (yTickValues) yAxis.tickValues(yTickValues);
-            // if (yTicks) yAxis.ticks(yTicks);
-
-            g.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
-
-            g.append("g")
-                .attr("class", "axis axis--y")
-                .call(yAxis);
-
-            main_area = g.append("path")
-                .attr("class", "area main");
+            slider = $(input.node()).data("ionRangeSlider");
 
             var label = container
                 .append("label")
@@ -111,7 +66,12 @@ function range_control() {
                 .append("input")
                 .attr("type", "checkbox")
                 .attr("class", "form-check-input")
-                .attr("value", "");
+                .attr("value", "")
+                .attr("checked", context.show_empty)
+                .on("change", function(){
+                    context.show_empty = this.checked;
+                    dispatcher.call("change", this, {extent: context.selectedExtent, show_empty: context.show_empty});
+                });
 
             var check_text = label
                 .append("span")
@@ -122,26 +82,35 @@ function range_control() {
             my.update = update;
 
             function update() {
-                if (!minY) minY = 0;
-                maxY = d3.max(context.histo_data.main, function(d) {return d.n});
-                x.domain(d3.extent(context.histo_data.main, function(d) {return d[context.varName]}));
-                y.domain([minY, maxY]);
+                if (context.selectedExtent.length) {
+                    context.selectedExtent[0] = Math.max(context.selectedExtent[0], context.domain[0]);
+                    context.selectedExtent[1] = Math.min(context.selectedExtent[1], context.domain[1]);
 
-                g.select("g.axis.axis--y").call(yAxis);
-                g.select("g.axis.axis--x").call(xAxis);
+                    slider.update({
+                        min: context.domain[0],
+                        max: context.domain[1]
+                    });
+                } else {
+                    slider.update({
+                        min: context.domain[0],
+                        max: context.domain[1],
+                        from: context.domain[0],
+                        to: context.domain[1]
+                    });
+                }
 
-                main_area
-                    .datum(context.histo_data.main)
-                    .transition()
-                    .duration(500)
-                    .attr("d", area);
-
-                check_text.text("Показувати пусті (" + (context.histo_data.empty ? context.histo_data.empty.n : 0) + ")");
+                check_text.text("Показувати пусті (" + context.empty_count + ")");
 
                 return my;
             }
         });
 
+    }
+
+    function prettifyDomain(domain, step) {
+        var min = domain[0], max = domain[1];
+        if (max % step == 0) max -= step;
+        return [min - min % step, max + (step - max % step)];
     }
 
     my.placeholder = function(value) {
@@ -156,15 +125,48 @@ function range_control() {
         return my;
     };
 
-    my.histo_data = function(value) {
-        if (!arguments.length) return context.histo_data;
-        context.histo_data = value;
+    my.step = function(value) {
+        if (!arguments.length) return context.step;
+        context.step = value;
+        return my
+    };
+
+    my.prefix = function(value) {
+        if (!arguments.length) return context.prefix;
+        context.prefix = value;
+        return my
+    };
+
+    my.domain = function(value) {
+        if (!arguments.length) return context.domain;
+        context.domain = prettifyDomain(value, context.step);
+        return my
+    };
+
+    my.total_count = function(value) {
+        if (!arguments.length) return context.total_count;
+        context.total_count = value;
+        return my
+    };
+
+    my.empty_count = function(value) {
+        if (!arguments.length) return context.empty_count;
+        context.empty_count = value;
+        return my
+    };
+
+    my.selectedExtent = function(value) {
+        if (!arguments.length) return context.selectedExtent;
+        context.selectedExtent = value;
+
+        my.update();
         return my;
     };
 
-    my.selectedExtent = function() {
-        if (!context.histo_data.main.length) return [];
-        return d3.extent(context.histo_data.main, function(d){return d[context.varName]});
+    my.show_empty = function(value) {
+        if (!arguments.length) return context.show_empty;
+        context.show_empty = value;
+        return my
     };
 
     my.onChange = function(value) {

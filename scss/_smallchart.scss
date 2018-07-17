@@ -13,23 +13,23 @@ svg.smallchart {
   .axis path {
     opacity: .1;
     stroke-width: 1;
-    display: none;
+    //display: none;
   }
 
   .tick line {
     opacity: .1;
     stroke-width: 1;
-    display: none;
+    //display: none;
   }
 
   .line.main {
-    display: none;
+    //display: none;
     fill: none;
     stroke: $path_color;
   }
 
   .area.main {
-    //display: none;
+    display: none;
     fill-opacity: 1;
     fill: $area_color;
   }
