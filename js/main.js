@@ -23,11 +23,16 @@ var total_chart = smallchart()
 
 var small_multiples_chart = small_multiples();
 
-addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+var region_control = addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+
 addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
 addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
-addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
-addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
+
+var brand_control = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData);
+
+// addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
+// addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
+
 addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
 addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getExtentData);
 addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getExtentData);
@@ -36,8 +41,8 @@ var badge_control = badges_control();
 d3.select("#badge_control").call(badge_control);
 
 badge_control.onChange(function(change) {
-   if (change.region) regions_control.uncheck(change.region);
-   if (change.producer) producers_control.uncheck(change.producer);
+    if (change.region) region_control.uncheck(change.region);
+    if (change.brand) brand_control.uncheck(change.brand);
 });
 
 filter_chain.triggerChange(-1);
@@ -105,6 +110,8 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
             });
         }
     })
+
+    return control;
 }
 
 function addRangeControl(filter_chain, field, placeholder, getFieldData) {
@@ -135,5 +142,7 @@ function addRangeControl(filter_chain, field, placeholder, getFieldData) {
                     .update();
             });
         }
-    })
+    });
+
+    return control;
 }

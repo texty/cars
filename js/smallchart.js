@@ -50,7 +50,7 @@ function smallchart() {
             var line = d3.line()
                 .x(function(d) { return x(d.monday)})
                 .y(function(d) { return y(d[varName])})
-                .curve(d3.curveStepAfter);
+                .curve(d3.curveLinear);
 
             var area = d3.area()
                 .x(function(d) {return x(d.monday)})

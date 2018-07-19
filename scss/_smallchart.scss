@@ -16,6 +16,10 @@ svg.smallchart {
     //display: none;
   }
 
+  .axis--y path {
+    display: none;
+  }
+
   .tick line {
     opacity: .1;
     stroke-width: 1;
@@ -26,6 +30,7 @@ svg.smallchart {
     //display: none;
     fill: none;
     stroke: $path_color;
+    shape-rendering: geometricPrecision;
   }
 
   .area.main {

@@ -10,7 +10,7 @@ function badges_control() {
             var container = d3.select(this);
             
             var regions_container = container.select("#regions_container");
-            var producer_model_container = container.select("#producer_model_container");
+            var brand_container = container.select("#brands_container");
 
             function update() {
                 var data = badgesFromQuery(query);
@@ -37,26 +37,26 @@ function badges_control() {
                 //
                 //
 
-                var producers_join = producer_model_container
+                var brand_join = brand_container
                     .selectAll("div.badge-row")
-                    .data(data.producer, function(d) {return d.id});
+                    .data(data.brand, function(d) {return d.id});
 
-                var producers_enter = producers_join
+                var brands_enter = brand_join
                     .enter()
                     .append("div")
                     .attr("class", "badge-row row countable");
 
-                producers_enter
+                brands_enter
                     .append("div")
                     .attr("class", "badge-item")
                     .text(function(d){return d.name});
 
-                producers_join.exit().remove();
+                brand_join.exit().remove();
 
-                producer_model_container
+                brand_container
                     .selectAll("div.badge-item")
                     .on("click", function(d) {
-                        dispatcher.call("change", this, {producer: d});
+                        dispatcher.call("change", this, {brand: d});
                     });
 
 
@@ -75,7 +75,7 @@ function badges_control() {
         var result = {};
 
         var query_region = query.filter(function(d){return d.field === "region"})[0];
-        var query_producer = query.filter(function(d){return d.field === "producer"})[0];
+        var query_brand = query.filter(function(d){return d.field === "brand"})[0];
 
         if (query_region) {
             result.region = query_region.values.map(function (id) {
@@ -89,13 +89,13 @@ function badges_control() {
             result.region = [];
         }
 
-        if (query_producer) {
-            result.producer = query_producer.values.map(function(pr) {
+        if (query_brand) {
+            result.brand = query_brand.values.map(function(pr) {
                 return {name: pr, id: pr}
             })
 
         } else {
-            result.producer = [];
+            result.brand = [];
         }
 
         return result;
