@@ -86,36 +86,23 @@ var data_provider = (function() {
         getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/query?json=" + query_str, function(err, data){
             if (err) throw err;
 
-            var by_region = d3.nest()
-                .key(function(d){return d.region})
-                .rollup(function(leaves) {
-                    var filled = fillDates(leaves, dates_extent);
-                    filled.forEach(function(row){
-                        row.monday = new Date(row.monday);
-                        row.n = +row.n;
-                    });
-                    return filled;
-                })
-                .entries(data);
+            data.total = mapTimeseriesToObject(data.total);
 
-            fillRegions(by_region, query.region);
-            
-            by_region.forEach(function(d){
-                d.region = region_utils.REGION_BY_CODE[d.key];
-                d.timeseries = d.value;
-                delete d.value;
-
-                d.total = d3.sum(d.timeseries, function(obj){return obj.n});
+            Object.keys(data.by_region).forEach(function(region) {
+                data.by_region[region] = mapTimeseriesToObject(data.by_region[region]);
             });
-            var total = calculateTotal(by_region);
 
-            by_region.sort(function(a,b){return b.total - a.total});
+            data.by_region = Object.keys(data.by_region).map(function(region) {
+                return {
+                    region: region_utils.REGION_BY_CODE[region],
+                    timeseries: data.by_region[region],
+                    total: d3.sum(data.by_region[region], function(obj) {return obj.n})
+                }
+            });
 
-            var result = {
-                by_region: by_region,
-                total: total
-            };
-            return cb(err, result);
+            data.by_region.sort(function(a,b){return b.total - a.total});
+
+            return cb(err, data);
         });
 
         return;

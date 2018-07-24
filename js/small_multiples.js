@@ -14,7 +14,7 @@ function small_multiples() {
             parent_container = d3.select(this);
             var item_containers = parent_container
                 .selectAll("div.small_multiples_item")
-                .data(items, function(d){return d.key})
+                .data(items, function(d){return d.region.code})
                 .enter()
                 .append("div")
                 .attr("class", "small_multiples_item col-6 col-md-4");
@@ -44,7 +44,7 @@ function small_multiples() {
             function update() {
                 var join_selection = parent_container
                     .selectAll("div.small_multiples_item")
-                    .data(items, function(d){return d.key})
+                    .data(items, function(d){return d.region.code})
                     .each(function(d, i){
                         this.__chart__
                             .data(d.timeseries)
@@ -61,11 +61,11 @@ function small_multiples() {
                 if (!regions || !regions.length) return item_containers.classed("hidden", false);
 
                 item_containers
-                    .filter(function(d) {return regions.indexOf(d.key) >= 0})
+                    .filter(function(d) {return regions.indexOf(d.region.code) >= 0})
                     .classed("hidden", false);
 
                 item_containers
-                    .filter(function(d) {return regions.indexOf(d.key) < 0})
+                    .filter(function(d) {return regions.indexOf(d.region.code) < 0})
                     .classed("hidden", true);
             }
         });
