@@ -12,7 +12,7 @@ function fillDates(sorted, extent) {
 
 function addDays(date_str, n) {
     var date = moment.utc(date_str);
-    date.add(7, 'days');
+    date.add(n, 'days');
     return date.toISOString().substr(0, 10);
 }
 
@@ -22,7 +22,7 @@ function datesInRange(min_str, max_str) {
 
     while (date_str <= max_str) {
         result.push(date_str);
-        date_str = addDays(date_str, 1);
+        date_str = addDays(date_str, 7);
     }
 
     return result;

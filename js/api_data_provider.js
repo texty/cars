@@ -6,6 +6,9 @@ var data_provider = (function() {
 
     // Повинні бути понеділками!!!!
     const dates_extent = ['2016-12-26', '2018-03-05'];
+    const all_possible_mondays = datesInRange(dates_extent[0], dates_extent[1]);
+
+
     // const dates_extent = ['2017-01-03', '2018-03-06'];
 
     Object.keys(region_utils.REGION_BY_CODE).forEach(function(code) {
@@ -80,7 +83,7 @@ var data_provider = (function() {
 
         var query_str = encodeURI(JSON.stringify(query));
 
-        getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/by_region/query?json=" + query_str, function(err, data){
+        getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/query?json=" + query_str, function(err, data){
             if (err) throw err;
 
             var by_region = d3.nest()
@@ -118,6 +121,32 @@ var data_provider = (function() {
         return;
     };
 
+    var getTimeSeriesByQueryByRegionByBrand_xhr;
+    module.getTimeSeriesByQueryByRegionByBrand = function(query, cb) {
+        if (getTimeSeriesByQueryByRegionByBrand_xhr) getTimeSeriesByQueryByRegionByBrand_xhr.abort();
+
+        var query_str = encodeURI(JSON.stringify(query));
+
+        getTimeSeriesByQueryByRegionByBrand_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/queries?json=" + query_str, function(err, data){
+            if (err) throw err;
+
+            Object.keys(data.total).forEach(function(brand){
+               data.total[brand] = mapTimeseriesToObject(data.total[brand]);
+            });
+
+            Object.keys(data.by_region).forEach(function(region) {
+                Object.keys(data.by_region[region]).forEach(function (brand) {
+                    data.by_region[region][brand] = mapTimeseriesToObject(data.by_region[region][brand]);
+                });
+            });
+
+            return cb(err, data);
+        });
+
+        return;
+    };
+
+
 
 
 
@@ -137,7 +166,7 @@ var data_provider = (function() {
         var rest = array_of_arrays.slice(1);
 
         return first.map(function(obj, i) {
-            return sumFunction(obj, rest.map(function(arr) {return arr[i]} ));
+            return sumFunction(obj, rest.map(function(arr) {return arr[i]}));
         })
     }
 
@@ -166,6 +195,15 @@ var data_provider = (function() {
                 by_region.push(region_data);
             }
         });
+    }
+
+    function mapTimeseriesToObject(timeseries) {
+        return timeseries.map(function(n,i){
+            return {
+                monday: new Date(all_possible_mondays[i]),
+                n: n
+            }
+        })
     }
 
     function fillWithZeros(ordered_data, varName, step) {

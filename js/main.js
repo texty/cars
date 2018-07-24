@@ -57,18 +57,33 @@ filter_chain.onChange(function(query) {
 
     badge_control.query(query).update();
 
-    data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
-        console.log(arguments);
-        if (err) throw err;
+    if (query.filter(function(d) {return d.field === "brand"}).length) {
+        data_provider.getTimeSeriesByQueryByRegionByBrand(query, function(err, data) {
+            if (err) throw err;
 
-        console.log(data.by_region);
+            console.log(data.by_region);
 
-        small_multiples_chart
-            .items(data.by_region)
-            .update();
+            small_multiples_chart
+                .items(data.by_region)
+                .update();
 
-        total_chart.data(data.total).update();
-    });
+            total_chart.data(data.total).update();
+        });
+
+    } else {
+        data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
+            console.log(arguments);
+            if (err) throw err;
+
+            console.log(data.by_region);
+
+            small_multiples_chart
+                .items(data.by_region)
+                .update();
+
+            total_chart.data(data.total).update();
+        });
+    }
 });
 
 data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
