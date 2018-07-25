@@ -1,7 +1,7 @@
 function smallchart() {
 
     var varName
-        , data = []
+        , data = [[]]
         , main_path
         , main_area
         
@@ -23,6 +23,8 @@ function smallchart() {
         , formatMonth = d3.timeFormat("%b")
         , formatYear = d3.timeFormat("%Y")
         ;
+
+    var access = function(d){return d[varName]};
 
     function my(selection) {
         selection.each(function(d) {
@@ -58,11 +60,11 @@ function smallchart() {
                 .y1(function(d) {return y(d[varName])})
                 .curve(d3.curveStepAfter);
             
-            x.domain(d3.extent(data, function(d) {return d.monday}));
+            x.domain(d3.extent(data[0], function(d) {return d.monday}));
 
             if (!minY) minY = 0;
-            if (!maxY) maxY = d3.max(data, function(d) {return d[varName]});
-            
+            if (!maxY) maxY = d3.max(data, function(arr) {return d3.max(arr, access)});
+
             // if (!minValueY) minValueY = minY;
             // if (!maxValueY) maxValueY = maxY;
 
@@ -94,15 +96,36 @@ function smallchart() {
                 .attr("class", "axis axis--y")
                 .call(yAxis);
             
-            main_area = g.append("path")
-                .datum(data)
-                .attr("class", "area main")
-                .attr("d", area);
+            var line_g = g
+                .append("g")
+                .attr("class", "line-pane")
+            
+            var area_g = g
+                .append("g")
+                .attr("class", "area-pane")
 
-            main_path = g.append("path")
-                .datum(data)
-                .attr("class", "line main")
-                .attr("d", line);
+
+            // main_area = g.selectAll("path.area.main")
+            //     .data(data)
+            //     .enter()
+            //     .append("path")
+            //     .attr("class", "area main")
+            //     .attr("d", function(d) {return area(d)});
+
+            // main_area = g.append("path")
+            //     .datum(data[0])
+
+            // main_path = g.selectAll("path.line.main")
+            //     .data(data)
+            //     .enter()
+            //     .append("path")
+            //     .attr("class", "line main")
+            //     .attr("d", function(d) {return line(d)});
+
+            // main_path = g.append("path")
+            //     .datum(data[0])
+            //     .attr("class", "line main")
+            //     .attr("d", line);
             //
             // var tip_g = g.append("g")
             //     .attr("class", "tip");
@@ -119,56 +142,76 @@ function smallchart() {
 
 
             function update() {
-                if (!fixed_y_axis) maxY = d3.max(data, function(d) {return d[varName]});
+                if (!fixed_y_axis) maxY = d3.max(data, function(arr){return d3.max(arr, access)});
                 y.domain([minY, maxY]);
 
                 g.select("g.axis.axis--y").call(yAxis);
 
-                main_path
-                    .datum(data)
-                    .transition()
-                    .duration(500)
-                    .attr("d", line);
+                var line_join = line_g.selectAll("path.line.main")
+                    .data(data);
 
-                main_area
-                    .datum(data)
+                line_join.exit().remove();
+
+                var line_enter = line_join
+                    .enter()
+                    .append("path")
+                    .attr("class", "line main");
+
+                line_enter
+                    .merge(line_join)
                     .transition()
                     .duration(500)
-                    .attr("d", area);
+                    .attr("d", function(d) {return line(d)});
+
+                var area_join = area_g.selectAll("path.area.main")
+                    .data(data);
+
+                area_join.exit().remove();
+
+                var area_enter = area_join
+                    .enter()
+                    .append("path")
+                    .attr("class", "area main");
+
+                area_enter
+                    .merge(area_join)
+                    .transition()
+                    .duration(500)
+                    .attr("d", function(d) {return area(d)});
 
                 return my;
             }
 
             my.update = update;
 
-            function repair_data(idx) {
-                if (!maxStep) return;
-
-                var idx_value = future[idx][varName];
-                var previous_value, i, value;
-
-                previous_value = idx_value;
-                for (i = idx + 1; i < future.length; i++) {
-                    value = future[i][varName];
-                    if (Math.abs(value - previous_value) <= maxStep) break;
-
-                    future[i][varName] = value - previous_value > 0 ? previous_value + maxStep : previous_value - maxStep;
-                    previous_value = future[i][varName];
-                }
-
-                previous_value = idx_value;
-                for (i = idx - 1; i >=0 ; i--) {
-                    value = future[i][varName];
-                    if (Math.abs(value - previous_value) <= maxStep) break;
-
-                    future[i][varName] = value - previous_value > 0 ? previous_value + maxStep : previous_value - maxStep;
-                    previous_value = future[i][varName];
-                }
-            }
-
-            function minmax(v, min, max) {
-                return Math.min(Math.max(v, min), max);
-            }
+            // function repair_data(idx) {
+            //     if (!maxStep) return;
+            //
+            //     var idx_value = future[idx][varName];
+            //     var previous_value, i, value;
+            //
+            //     previous_value = idx_value;
+            //     for (i = idx + 1; i < future.length; i++) {
+            //         value = future[i][varName];
+            //         if (Math.abs(value - previous_value) <= maxStep) break;
+            //
+            //         future[i][varName] = value - previous_value > 0 ? previous_value + maxStep : previous_value - maxStep;
+            //         previous_value = future[i][varName];
+            //     }
+            //
+            //     previous_value = idx_value;
+            //     for (i = idx - 1; i >=0 ; i--) {
+            //         value = future[i][varName];
+            //         if (Math.abs(value - previous_value) <= maxStep) break;
+            //
+            //         future[i][varName] = value - previous_value > 0 ? previous_value + maxStep : previous_value - maxStep;
+            //         previous_value = future[i][varName];
+            //     }
+            // }
+            //
+            // function minmax(v, min, max) {
+            //     return Math.min(Math.max(v, min), max);
+            // }
         });
     }
 

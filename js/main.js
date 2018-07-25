@@ -87,15 +87,18 @@ filter_chain.onChange(function(query) {
 });
 
 data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
-        if (err) throw err;
+    if (err) throw err;
 
-        total_chart
-            .data(data.total);
-        d3.select('#total_chart').call(total_chart);
+    total_chart
+        .data(data.total);
+    d3.select('#total_chart').call(total_chart);
 
-        small_multiples_chart
-            .items(data.by_region);
-        d3.select("#small_multiples").call(small_multiples_chart);
+    small_multiples_chart
+        .items(data.by_region);
+    d3.select("#small_multiples").call(small_multiples_chart);
+
+    total_chart.update();
+    small_multiples_chart.update();
 });
 
 
@@ -124,7 +127,7 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
                     .update();
             });
         }
-    })
+    });
 
     return control;
 }
