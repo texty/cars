@@ -60,10 +60,10 @@ function smallchart() {
                 .y1(function(d) {return y(d[varName])})
                 .curve(d3.curveStepAfter);
             
-            x.domain(d3.extent(data[0], function(d) {return d.monday}));
+            x.domain(d3.extent(data[0].values, function(d) {return d.monday}));
 
             if (!minY) minY = 0;
-            if (!maxY) maxY = d3.max(data, function(arr) {return d3.max(arr, access)});
+            if (!maxY) maxY = d3.max(data, function(obj) {return d3.max(obj.values, access)});
 
             // if (!minValueY) minValueY = minY;
             // if (!maxValueY) maxValueY = maxY;
@@ -98,11 +98,11 @@ function smallchart() {
             
             var line_g = g
                 .append("g")
-                .attr("class", "line-pane")
+                .attr("class", "line-pane");
             
             var area_g = g
                 .append("g")
-                .attr("class", "area-pane")
+                .attr("class", "area-pane");
 
 
             // main_area = g.selectAll("path.area.main")
@@ -142,13 +142,13 @@ function smallchart() {
 
 
             function update() {
-                if (!fixed_y_axis) maxY = d3.max(data, function(arr){return d3.max(arr, access)});
+                if (!fixed_y_axis) maxY = d3.max(data, function(obj){return d3.max(obj.values, access)});
                 y.domain([minY, maxY]);
 
                 g.select("g.axis.axis--y").call(yAxis);
 
                 var line_join = line_g.selectAll("path.line.main")
-                    .data(data);
+                    .data(data, function(d){return d.key});
 
                 line_join.exit().remove();
 
@@ -161,7 +161,7 @@ function smallchart() {
                     .merge(line_join)
                     .transition()
                     .duration(500)
-                    .attr("d", function(d) {return line(d)});
+                    .attr("d", function(d) {return line(d.values)});
 
                 var area_join = area_g.selectAll("path.area.main")
                     .data(data);
@@ -177,7 +177,7 @@ function smallchart() {
                     .merge(area_join)
                     .transition()
                     .duration(500)
-                    .attr("d", function(d) {return area(d)});
+                    .attr("d", function(d) {return area(d.values)});
 
                 return my;
             }

@@ -86,7 +86,7 @@ var data_provider = (function() {
         getTimeSeriesByQueryByRegion_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/query?json=" + query_str, function(err, data){
             if (err) throw err;
 
-            data.total = [mapTimeseriesToObject(data.total)];
+            data.total = [{key: "total", values: mapTimeseriesToObject(data.total)}];
 
             Object.keys(data.by_region).forEach(function(region) {
                 data.by_region[region] = mapTimeseriesToObject(data.by_region[region]);
@@ -95,7 +95,7 @@ var data_provider = (function() {
             data.by_region = Object.keys(data.by_region).map(function(region) {
                 return {
                     region: region_utils.REGION_BY_CODE[region],
-                    timeseries: [data.by_region[region]],
+                    timeseries: [{key: "total", values: data.by_region[region]}],
                     total: d3.sum(data.by_region[region], function(obj) {return obj.n})
                 }
             });
@@ -117,13 +117,15 @@ var data_provider = (function() {
         getTimeSeriesByQueryByRegionByBrand_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/queries?json=" + query_str, function(err, data){
             if (err) throw err;
 
-            var total = [];
+            var total_timeseries = [];
             Object.keys(data.total).forEach(function(brand){
-                total.push(mapTimeseriesToObject(data.total[brand]));
-                // data.total[brand] = mapTimeseriesToObject(data.total[brand]);
+                total_timeseries.push({
+                    key: brand,
+                    values: mapTimeseriesToObject(data.total[brand])
+                });
             });
 
-            data.total = total;
+            data.total = total_timeseries;
 
 
             data.by_region = Object.keys(data.by_region).map(function(region) {
@@ -134,9 +136,11 @@ var data_provider = (function() {
                 };
 
                 Object.keys(data.by_region[region]).forEach(function (brand) {
-                    region_data.timeseries.push(mapTimeseriesToObject(data.by_region[region][brand]));
-                    region_data.total += d3.sum(data.by_region[region][brand])
-                    // data.by_region[region][brand] = mapTimeseriesToObject(data.by_region[region][brand]);
+                    region_data.timeseries.push({
+                        key: brand,
+                        values: mapTimeseriesToObject(data.by_region[region][brand])
+                    });
+                    region_data.total += d3.sum(data.by_region[region][brand]);
                 });
 
                 return region_data;
