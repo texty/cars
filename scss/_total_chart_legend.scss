@@ -1,0 +1,19 @@
+#total_chart_legend {
+
+  text-align: right;
+
+  .legend-item {
+    display: inline-block;
+    border-radius: 4px;
+
+    color: white;
+
+    line-height: 1.5;
+    min-width: 4em;
+
+    margin-left: 1em;
+
+    padding: 0 0.5em;
+    vertical-align: middle;
+  }
+}

@@ -53,6 +53,9 @@ function badges_control() {
 
                 brand_join.exit().remove();
 
+                brands_enter.merge(brand_join)
+                    .select(".badge-item")
+                    .attr("class", function(d, i) { return "badge-item " + "line-chart-color-" + (i+1)});
                 brand_container
                     .selectAll("div.badge-item")
                     .on("click", function(d) {

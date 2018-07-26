@@ -3,12 +3,14 @@
 @import "base/mixins";
 @import "base/base";
 
+@import "line_colors";
 @import "smallchart";
 @import "list_control";
 @import "range_control";
 @import "small_multiples_item";
 @import "badges_control";
 @import "filter_chain";
+@import "total_chart_legend";
 
 
 body {

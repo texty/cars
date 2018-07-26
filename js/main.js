@@ -63,6 +63,9 @@ filter_chain.onChange(function(query) {
 
             console.log(data.by_region);
 
+            var brands = data.total.map(function(d) {return d.key});
+            total_chart_legend.data(brands).update();
+
             small_multiples_chart
                 .items(data.by_region)
                 .update();
@@ -76,6 +79,8 @@ filter_chain.onChange(function(query) {
             if (err) throw err;
 
             console.log(data.by_region);
+
+            total_chart_legend.data([]);
 
             small_multiples_chart
                 .items(data.by_region)

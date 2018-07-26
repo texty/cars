@@ -36,7 +36,7 @@ function smallchart() {
 
             // circleRadius = d3.select("body").classed("xs") ? 12 : 5;
 
-            var margin = {top: 5, right: 15, bottom: 15, left: 20}
+            var margin = {top: 5, right: 0, bottom: 15, left: 20}
                 , width = w - margin.left - margin.right
                 , height = h - margin.top - margin.bottom
                 , g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
