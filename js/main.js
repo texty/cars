@@ -57,13 +57,15 @@ filter_chain.onChange(function(query) {
 
     badge_control.query(query).update();
 
-    if (query.filter(function(d) {return d.field === "brand"}).length) {
+    var brand_filter = query.filter(function(d) {return d.field === "brand"})[0];
+
+    if (brand_filter) {
         data_provider.getTimeSeriesByQueryByRegionByBrand(query, function(err, data) {
             if (err) throw err;
 
             console.log(data.by_region);
 
-            var brands = data.total.map(function(d) {return d.key});
+            var brands = brand_filter.values;
             total_chart_legend.data(brands).update();
 
             small_multiples_chart
@@ -80,7 +82,7 @@ filter_chain.onChange(function(query) {
 
             console.log(data.by_region);
 
-            total_chart_legend.data([]);
+            total_chart_legend.data([]).update();
 
             small_multiples_chart
                 .items(data.by_region)

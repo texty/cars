@@ -117,6 +117,8 @@ var data_provider = (function() {
         getTimeSeriesByQueryByRegionByBrand_xhr = cached_fetch_json(API_HOST +  "/api/timeseries/queries?json=" + query_str, function(err, data){
             if (err) throw err;
 
+            var brands_order = query.filter(function(filter){return filter.field === "brand"})[0].values;
+
             var total_timeseries = [];
             Object.keys(data.total).forEach(function(brand){
                 total_timeseries.push({
@@ -124,9 +126,9 @@ var data_provider = (function() {
                     values: mapTimeseriesToObject(data.total[brand])
                 });
             });
+            total_timeseries.sort(function(a,b){return brands_order.indexOf(a.key) - brands_order.indexOf(b.key)});
 
             data.total = total_timeseries;
-
 
             data.by_region = Object.keys(data.by_region).map(function(region) {
                 var region_data = {
@@ -141,6 +143,8 @@ var data_provider = (function() {
                         values: mapTimeseriesToObject(data.by_region[region][brand])
                     });
                     region_data.total += d3.sum(data.by_region[region][brand]);
+
+                    region_data.timeseries.sort(function(a,b){return brands_order.indexOf(a.key) - brands_order.indexOf(b.key)});
                 });
 
                 return region_data;
