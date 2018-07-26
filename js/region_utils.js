@@ -31,5 +31,10 @@ var region_utils = (function(){
         "85": {name: "Севастополь", short_name: "Севастополь", code: "85"}
     };
     
+    module.REGION_SHORT_BY_CODE = Object.keys(module.REGION_BY_CODE).reduce(function(o,key,i){
+        o[key] = module.REGION_BY_CODE[key].short_name;
+        return o; 
+    }, {});
+    
     return module;
 })();

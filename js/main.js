@@ -23,26 +23,28 @@ var total_chart = smallchart()
 
 var small_multiples_chart = small_multiples();
 
-var region_control = addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+var controls = {};
 
-addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
-addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
-
-var brand_control = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData);
+controls.region = addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
+controls.kind = addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
+controls.fuel = addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
+controls.brand = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData);
 
 // addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
 // addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
 
-addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
-addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getExtentData);
-addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getExtentData);
+controls.make_year = addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
+controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getExtentData);
+controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getExtentData);
 
-var badge_control = badges_control();
+var badge_control = badges_control()
+    .color_fields(["brand"])
+    .display_value_dictionary({region: region_utils.REGION_SHORT_BY_CODE});
 d3.select("#badge_control").call(badge_control);
 
 badge_control.onChange(function(change) {
-    if (change.region) region_control.uncheck(change.region);
-    if (change.brand) brand_control.uncheck(change.brand);
+    controls[change.field].uncheck(change.value);
+    //todo for range controls
 });
 
 filter_chain.triggerChange(-1);

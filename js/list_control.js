@@ -57,7 +57,7 @@ function list_control() {
             my.uncheck = function(value) {
                 ul.selectAll("li.list-group-item")
                     .select("input")
-                    .filter(function(d){return d.id === value.id})
+                    .filter(function(d){return d.id === value})
                     .node().click();
             };
 
