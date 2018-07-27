@@ -3,7 +3,6 @@ function range_control() {
     var container
         , context = {
             placeholder: "",
-            histo_data: {empty:null, main:[]},
             id: "",
             varName: "",
             step: 1,
@@ -14,6 +13,7 @@ function range_control() {
             selectedExtent: [],
             show_empty: true
         }
+        , format = (function() {var proto = d3.format(","); return function(value){return proto(value).replace(/,/g, " ")}})()
         , slider
         , dispatcher = d3.dispatch("change")
         , on_change_counter = 0
@@ -32,6 +32,7 @@ function range_control() {
                 .append("span")
                 .attr("class", "placeholder")
                 .text(context.placeholder);
+
 
             input = container
                 .append("input")
@@ -57,6 +58,11 @@ function range_control() {
             });
 
             slider = $(input.node()).data("ionRangeSlider");
+
+            var total = container
+                .append("span")
+                .attr("class", "total-text")
+                .text("Всього: " + format(context.total_count));
 
             var label = container
                 .append("label")
@@ -105,8 +111,9 @@ function range_control() {
                         to: context.domain[1]
                     });
                 }
+                total.text("Всього: " + format(context.total_count));
 
-                check_text.text("Показувати пусті (" + context.empty_count + ")");
+                check_text.text("Показувати пусті (" + format(context.empty_count) + ")");
                 empty_checkbox.node().checked = context.show_empty;
                 return my;
             }
