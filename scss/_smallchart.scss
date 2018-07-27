@@ -1,5 +1,5 @@
-$area_color: $blue;
-$path_color: $blue;
+$area_color: $main_color;
+$path_color: $main_color;
 
 svg.smallchart {
 
@@ -34,7 +34,7 @@ svg.smallchart {
   }
 
   path.line.main:nth-of-type(1) {
-    stroke: $blue;
+    stroke: $main_color;
   }
 
   path.line.main:nth-of-type(2) {

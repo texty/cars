@@ -7,12 +7,12 @@ p {
   font-size: 1em; }
 
 .line-chart-color-1 {
-  stroke: #2c68fa;
-  background-color: #2c68fa !important; }
+  stroke: #00bc6f;
+  background-color: #00bc6f !important; }
 
 .line-chart-color-2 {
-  stroke: #95f96a;
-  background-color: #95f96a !important; }
+  stroke: #2c68fa;
+  background-color: #2c68fa !important; }
 
 .line-chart-color-3 {
   stroke: #f94a46;
@@ -23,15 +23,15 @@ p {
   background-color: #ff2bfa !important; }
 
 .line-chart-color-5 {
-  stroke: #ffee89;
-  background-color: #ffee89 !important; }
+  stroke: #FFD800;
+  background-color: #FFD800 !important; }
 
 .order-colored-items :nth-child(1) {
+  stroke: #00bc6f;
+  background-color: #00bc6f !important; }
+.order-colored-items :nth-child(2) {
   stroke: #2c68fa;
   background-color: #2c68fa !important; }
-.order-colored-items :nth-child(2) {
-  stroke: #95f96a;
-  background-color: #95f96a !important; }
 .order-colored-items :nth-child(3) {
   stroke: #f94a46;
   background-color: #f94a46 !important; }
@@ -39,8 +39,8 @@ p {
   stroke: #ff2bfa;
   background-color: #ff2bfa !important; }
 .order-colored-items :nth-child(5) {
-  stroke: #ffee89;
-  background-color: #ffee89 !important; }
+  stroke: #FFD800;
+  background-color: #FFD800 !important; }
 
 svg.smallchart {
   shape-rendering: crispEdges;
@@ -57,10 +57,10 @@ svg.smallchart {
     stroke-width: 1; }
   svg.smallchart .line.main {
     fill: none;
-    stroke: #2c68fa;
+    stroke: #00bc6f;
     shape-rendering: geometricPrecision; }
   svg.smallchart path.line.main:nth-of-type(1) {
-    stroke: #2c68fa; }
+    stroke: #00bc6f; }
   svg.smallchart path.line.main:nth-of-type(2) {
     stroke: #95f96a; }
   svg.smallchart path.line.main:nth-of-type(3) {
@@ -72,26 +72,26 @@ svg.smallchart {
   svg.smallchart .area.main {
     display: none;
     fill-opacity: 1;
-    fill: #2c68fa; }
+    fill: #00bc6f; }
 
 .hidden {
   display: none !important; }
 
 .list-control {
   width: 100%;
-  border: 1px solid rgba(44, 104, 250, 0.125);
+  border: 1px solid rgba(0, 188, 111, 0.125);
   /* to make scrollbars always visible */ }
   .list-control input.searchbox {
     width: 100%;
     box-sizing: border-box;
     border: none;
-    border-bottom: 1px solid rgba(44, 104, 250, 0.125);
+    border-bottom: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 2px;
     padding: 12px 20px 12px 12px; }
   .list-control .list-group-item {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
-    border: 1px solid rgba(44, 104, 250, 0.125);
+    border: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 0; }
     .list-control .list-group-item:first-child {
       border: none; }
@@ -111,13 +111,13 @@ svg.smallchart {
 
 .range-control {
   width: 100%;
-  border: 1px solid rgba(44, 104, 250, 0.125); }
+  border: 1px solid rgba(0, 188, 111, 0.125); }
   .range-control span.placeholder {
     display: inline-block;
     color: grey;
     width: 100%;
     box-sizing: border-box;
-    border-bottom: 1px solid rgba(44, 104, 250, 0.125);
+    border-bottom: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 2px;
     padding: 12px 20px 12px 12px; }
   .range-control .control-content {
@@ -137,10 +137,10 @@ svg.smallchart {
     .range-control svg .line.main {
       display: none;
       fill: none;
-      stroke: #2c68fa; }
+      stroke: #00bc6f; }
     .range-control svg .area.main {
       fill-opacity: 1;
-      fill: #2c68fa; }
+      fill: #00bc6f; }
 
 .small_multiples_item {
   display: inline-block; }
@@ -150,7 +150,7 @@ svg.smallchart {
 
 #badge_control {
   margin-top: 50px;
-  border: 1px solid rgba(44, 104, 250, 0.125);
+  border: 1px solid rgba(0, 188, 111, 0.125);
   counter-reset: index; }
   #badge_control .badge-row {
     padding-top: 1em;
@@ -211,7 +211,7 @@ svg text {
 
 .header-block {
   color: white;
-  background-color: #2c68fa;
+  background-color: #00bc6f;
   padding-top: 2em;
   padding-bottom: 2em;
   margin-bottom: 5em; }
@@ -223,8 +223,8 @@ svg text {
 h6.header-badge {
   display: inline-block;
   text-transform: uppercase;
-  color: #2c68fa;
-  border: 1px solid #2c68fa;
+  color: #00bc6f;
+  border: 1px solid #00bc6f;
   padding-left: 0.2em;
   padding-right: 0.2em; }
 
