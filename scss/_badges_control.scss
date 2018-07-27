@@ -22,7 +22,14 @@
     }
   }
 
-
+  .badge-row-prefix {
+    display: inline-block;
+    min-height: 2.5em;
+    line-height: 2.5em;
+    min-width: 4em;
+    padding: 0 0.5em;
+    vertical-align: middle;
+  }
 
   .badge-item {
     display: inline-block;

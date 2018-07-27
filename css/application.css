@@ -162,6 +162,13 @@ svg.smallchart {
       border-radius: 25px;
       content: counters(index,".") " ";
       counter-increment: index; }
+  #badge_control .badge-row-prefix {
+    display: inline-block;
+    min-height: 2.5em;
+    line-height: 2.5em;
+    min-width: 4em;
+    padding: 0 0.5em;
+    vertical-align: middle; }
   #badge_control .badge-item {
     display: inline-block;
     border-radius: 4px;

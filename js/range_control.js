@@ -81,6 +81,13 @@ function range_control() {
 
             my.update = update;
 
+            my.uncheck = function(value) {
+                context.selectedExtent = [];
+                context.show_empty = true;
+                update();
+                dispatcher.call("change", this, {extent: context.selectedExtent, show_empty: context.show_empty});
+            };
+
             function update() {
                 if (context.selectedExtent.length) {
                     context.selectedExtent[0] = Math.max(context.selectedExtent[0], context.domain[0]);
@@ -100,7 +107,7 @@ function range_control() {
                 }
 
                 check_text.text("Показувати пусті (" + context.empty_count + ")");
-
+                empty_checkbox.node().checked = context.show_empty;
                 return my;
             }
         });

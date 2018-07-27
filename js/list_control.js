@@ -7,7 +7,8 @@ function list_control() {
             show_badges: false,
             id: null,
             order: true,
-            state: null
+            state: null,
+            max_selected: null
         }
         , badgeFormat
         , ps
@@ -79,6 +80,11 @@ function list_control() {
                     .append("li")
                     .attr("class", "list-group-item d-flex justify-content-between align-items-center")
                     .on("change", function(d){
+                        if (context.max_selected && d3.event.target.checked && my.selected().length >= context.max_selected) {
+                            d3.event.target.checked = false;
+                            return;
+                        }
+
                         d.checked = d3.event.target.checked;
                         dispatcher.call("change", this, {change: d, all: context.items});
                     });
@@ -177,7 +183,13 @@ function list_control() {
             .filter(function(d){return d.checked})
             .map(function(d){return d.id})
     };
-    
+
+    my.max_selected = function(value) {
+        if (!arguments.length) return context.max_selected;
+        context.max_selected = value;
+        return my;
+    };
+
     function normalize(str) {
         if (!str) return "";
         return str.trim().toUpperCase().replace(/\s+/g, " ");

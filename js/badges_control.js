@@ -5,6 +5,7 @@ function badges_control() {
         , dispatcher = d3.dispatch("change")
         , color_fields = []
         , display_value_dictionary = {}
+        , field_name_dictionary = {}
         ;
 
     function my(selection) {
@@ -25,7 +26,12 @@ function badges_control() {
                 var rows_enter = rows_join
                     .enter()
                     .append("div")
-                    .attr("class", "row badge-row")
+                    .attr("class", "row badge-row");
+
+
+                rows_enter.append("div").attr("class", "badge-row-prefix").text(function(f){return field_name_dictionary[f.field] + ": "});
+                rows_enter
+                    .append("div").attr("class", "badge-items-container")
                     .classed("order-colored-items", function(f){return color_fields.indexOf(f.field) >=0 });
 
                 rows_join.exit().remove();
@@ -33,20 +39,67 @@ function badges_control() {
                 var rows_update = rows_enter
                     .merge(rows_join);
 
-                var items_join = rows_update
+                //
+                // Badges for list controls
+                //
+                var rows_update_list = rows_update
+                    .filter(function(f) {return f.verb === "in"});
+
+                var items_join_list = rows_update_list
+                    .select(".badge-items-container")
                     .selectAll("div.badge-item")
                     .data(function(f){return f.values}, function(d){return d});
 
-                items_join.exit().remove();
+                items_join_list.exit().remove();
 
-                var items_enter = items_join
+                var items_enter_list = items_join_list
                     .enter()
-                    .append("div")
-                    .attr("class", "badge-item")
+                    .append("div");
+
+                items_enter_list
+                    .attr("class", "badge-item list-filter-badge")
                     .text(function(d){
                         var filter = d3.select(this.parentNode).datum();
                         if (display_value_dictionary[filter.field]) return display_value_dictionary[filter.field][d];
                         return d;
+                    })
+                    .on("click", function(d) {
+                        var filter = d3.select(this.parentNode).datum();
+                        var change = {field: filter.field, value: d};
+                        dispatcher.call("change", this, change);
+                    });
+
+                //
+                //
+                //f
+
+                //
+                // Badges for range controls
+                //
+
+                var rows_update_range = rows_update
+                    .filter(function(f) {return f.verb === "between"});
+
+                rows_update_range.selectAll(".badge-item").remove();
+
+                var items_join_range = rows_update_range
+                    .select(".badge-items-container")
+                    .selectAll(".badge-item")
+                    .data(function(f){ return [f.values] });
+
+                items_join_range.exit().remove();
+
+                var items_enter_range = items_join_range
+                    .enter()
+                    .append("div");
+
+                items_enter_range
+                    .attr("class", "badge-item range-filter-badge")
+                    .text(function(d){
+                        var filter = d3.select(this.parentNode).datum();
+
+                        return (d.extent.length ? "від " + d.extent[0] + " до " + d.extent[1] + ",  " : "") +
+                            (d.show_empty ? "показувати пусті" : "сховати пусті");
                     })
                     .on("click", function(d) {
                         var filter = d3.select(this.parentNode).datum();
@@ -124,6 +177,12 @@ function badges_control() {
     my.display_value_dictionary = function(value) {
         if (!arguments.length) return display_value_dictionary;
         display_value_dictionary = value;
+        return my;
+    };
+
+    my.field_name_dictionary = function(value) {
+        if (!arguments.length) return field_name_dictionary;
+        field_name_dictionary = value;
         return my;
     };
 

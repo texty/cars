@@ -13,7 +13,16 @@ d3.timeFormatDefaultLocale({
     "shortMonths": ["січ", "лют", "бер", "кві", "тра", "чер", "лип", "сер", "вер", "жов", "лис", "гру"]
 });
 
-
+var field_names_dictionary = {
+    region: "Область",
+    kind: "Тип",
+    fuel: "Паливо",
+    brand: "Модель",
+    make_year: "Рік випуску",
+    color: "Колір",
+    capacity: "Об'єм (см³)",
+    total_weight: "Повна маса (кг)"
+};
 
 
 
@@ -28,18 +37,19 @@ var controls = {};
 controls.region = addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
 controls.kind = addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
 controls.fuel = addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
-controls.brand = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData);
+controls.brand = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(5);
 
 // addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
 // addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
 
 controls.make_year = addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
-controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", data_provider.getExtentData);
-controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", data_provider.getExtentData);
+controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData);
+controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData);
 
 var badge_control = badges_control()
     .color_fields(["brand"])
-    .display_value_dictionary({region: region_utils.REGION_SHORT_BY_CODE});
+    .display_value_dictionary({region: region_utils.REGION_SHORT_BY_CODE})
+    .field_name_dictionary(field_names_dictionary);
 d3.select("#badge_control").call(badge_control);
 
 badge_control.onChange(function(change) {
@@ -141,7 +151,7 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
     return control;
 }
 
-function addRangeControl(filter_chain, field, placeholder, getFieldData) {
+function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData) {
     var element = d3.select("#filter_chain")
         .append("div")
         .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3")
@@ -152,7 +162,7 @@ function addRangeControl(filter_chain, field, placeholder, getFieldData) {
     var control = range_control()
         .id(field)
         .placeholder(placeholder)
-        .prefix("кг ")
+        .prefix(prefix + " ")
         .step(50);
 
     element.call(control);
