@@ -45,6 +45,7 @@ controls.brand = addListControl(filter_chain, "brand", "Оберіть марк�
 controls.make_year = addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
 controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData);
 controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData);
+controls.color = addListControl(filter_chain, "color", "Оберіть колір", data_provider.getFieldData);
 
 var badge_control = badges_control()
     .color_fields(["brand"])

@@ -123,7 +123,7 @@ function range_control() {
 
     function prettifyDomain(domain, step) {
         var min = domain[0], max = domain[1];
-        if (max % step == 0) max -= step;
+        // if (max % step == 0) max -= step;
         return [min - min % step, max + (step - max % step)];
     }
 
