@@ -139,7 +139,6 @@ svg.smallchart {
     font-weight: 600; }
 
 #badge_control {
-  margin-top: 50px;
   border: 1px solid rgba(0, 188, 111, 0.125);
   counter-reset: index; }
   #badge_control .badge-row {

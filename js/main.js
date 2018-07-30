@@ -119,6 +119,10 @@ data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
 
     total_chart.update();
     small_multiples_chart.update();
+    
+    d3.selectAll("svg.smallchart .axis--x .tick text")
+        .filter(function(){return ["2017", "2018"].indexOf(this.innerHTML) >= 0})
+        .style("font-weight", "bold")
 });
 
 
