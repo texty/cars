@@ -51,7 +51,40 @@ h6.header-badge {
   padding-right: 0.2em;
 }
 
+.export-button {
+  background-color: rgba(0,0,0,0);
+  vertical-align: baseline;
+  line-height: 1.2;
+  padding: 0;
+  font-size: 16px;
+  color: $main_color;
+  border: 1px solid $main-color;
+  border-radius: 0;
+  padding-right: 0.4em;
+  padding-left: 0.4em;
 
+  transition: none;
+
+  svg {
+    vertical-align: baseline;
+    height: 0.8em;
+    path {
+      fill: $main_color
+    }
+  }
+
+  &:hover {
+    color: white;
+    background-color: $main-color;
+
+    svg {
+      path {
+        fill: white;
+      }
+    }
+
+  }
+}
 
 
 

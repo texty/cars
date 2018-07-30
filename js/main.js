@@ -184,3 +184,41 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
 
     return control;
 }
+
+
+function export_button_click(){
+    
+    var query = filter_chain.getCurrentQuery();
+    var brand_filter = query.filter(function(f){return f.field === "brand"})[0];
+
+    var csvContent = "data:text/csv;charset=utf-8,";
+
+    if (brand_filter) {
+        data_provider.getDataForExportWithBrand(query, function(err, export_data) {
+            csvContent += "date,region,brand,vehicles_registered\n" +
+            export_data.map(function(obj){
+                return [obj.date, obj.region, obj.brand, obj.vehicles_registered].join(",");
+            }).join("\n");
+        });
+        downloadCsvString(csvContent, "data.csv");
+    } else {
+        data_provider.getDataForExport(query, function(err, export_data) {
+            csvContent += "date,region,vehicles_registered\n" +
+            export_data.map(function(obj){
+                return [obj.date, obj.region, obj.vehicles_registered].join(",");
+            }).join("\n");
+        });
+        downloadCsvString(csvContent, "data.csv");
+    }
+}
+
+function downloadCsvString(csvContent, filename) {
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    link.innerHTML= "Click Here to download";
+    document.body.appendChild(link); // Required for FF
+    link.style.visibility = 'hidden';
+    link.click();
+}

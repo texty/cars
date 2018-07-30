@@ -33,25 +33,25 @@ svg.smallchart {
     shape-rendering: geometricPrecision;
   }
 
-  path.line.main:nth-of-type(1) {
-    stroke: $main_color;
-  }
-
-  path.line.main:nth-of-type(2) {
-    stroke: #95f96a;
-  }
-
-  path.line.main:nth-of-type(3) {
-    stroke: #f94a46;
-  }
-
-  path.line.main:nth-of-type(4) {
-    stroke: #ff2bfa;
-  }
-
-  path.line.main:nth-of-type(5) {
-    stroke: #ffee89;
-  }
+  //path.line.main:nth-of-type(1) {
+  //  stroke: $main_color;
+  //}
+  //
+  //path.line.main:nth-of-type(2) {
+  //  stroke: #95f96a;
+  //}
+  //
+  //path.line.main:nth-of-type(3) {
+  //  stroke: #f94a46;
+  //}
+  //
+  //path.line.main:nth-of-type(4) {
+  //  stroke: #ff2bfa;
+  //}
+  //
+  //path.line.main:nth-of-type(5) {
+  //  stroke: #ffee89;
+  //}
 
   .area.main {
     display: none;

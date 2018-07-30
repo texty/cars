@@ -98,7 +98,7 @@ function smallchart() {
             
             var line_g = g
                 .append("g")
-                .attr("class", "line-pane");
+                .attr("class", "line-pane order-colored-items");
             
             var area_g = g
                 .append("g")

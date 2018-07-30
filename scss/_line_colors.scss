@@ -26,27 +26,27 @@
 
 .order-colored-items {
   :nth-child(1) {
-    stroke: $main_color;
+    stroke: $main_color !important;
     background-color: $main_color !important;
   }
 
   :nth-child(2) {
-    stroke: #2c68fa;
+    stroke: #2c68fa !important;
     background-color: #2c68fa !important;
   }
 
   :nth-child(3) {
-    stroke: #f94a46;
+    stroke: #f94a46 !important;
     background-color: #f94a46 !important;
   }
 
   :nth-child(4) {
-    stroke: #ff2bfa;
+    stroke: #ff2bfa !important;
     background-color: #ff2bfa !important;
   }
 
   :nth-child(5) {
-    stroke: #FFD800;
+    stroke: #FFD800 !important;
     background-color: #FFD800 !important;
   }
 }

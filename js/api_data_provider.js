@@ -156,6 +156,53 @@ var data_provider = (function() {
         return;
     };
 
+    module.getDataForExport= function(query, cb) {
+        return module.getTimeSeriesByQueryByRegion(query, function(err, data){
+            var export_data = [];
+            
+            data.by_region.forEach(function(region_data){
+                var region = region_data.region.short_name;
+
+                var append_chunk = region_data.timeseries[0].values.map(function(row){
+                    return {
+                        region: region,
+                        date: row.monday.toISOString().substr(0, 10),
+                        vehicles_registered: row.n
+                    }
+                });
+
+                Array.prototype.push.apply(export_data, append_chunk);
+            });
+
+            cb(err, export_data);
+        });
+    };
+
+
+    module.getDataForExportWithBrand = function(query, cb) {
+        return module.getTimeSeriesByQueryByRegionByBrand(query, function(err, data){
+            var export_data = [];
+
+            data.by_region.forEach(function(region_data){
+                var region = region_data.region.short_name;
+
+                region_data.timeseries.forEach(function(brand_data) {
+                    var append_chunk = brand_data.values.map(function(row){
+                        return {
+                            region: region,
+                            brand: brand_data.key,
+                            date: row.monday.toISOString().substr(0, 10),
+                            vehicles_registered: row.n
+                        }
+                    });
+
+                    Array.prototype.push.apply(export_data, append_chunk);
+                });
+            });
+
+            cb(err, export_data);
+        });
+    };
 
 
 
@@ -249,8 +296,6 @@ var data_provider = (function() {
             return cb(err, JSON.parse(JSON.stringify(data)));
         })
     }
-
-    window.xhr_cache = xhr_cache;
 
     return module;
 })();
