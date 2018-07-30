@@ -196,6 +196,9 @@ svg.smallchart {
 body {
   color: #424242; }
 
+h3 {
+  margin-top: 2em; }
+
 svg text {
   fill: #424242; }
 
@@ -208,6 +211,7 @@ svg text {
   .header-block .header-text-block {
     max-width: 600px; }
   .header-block h3 {
+    margin-top: 0;
     font-weight: 800; }
 
 h6.header-badge {
@@ -240,5 +244,19 @@ h6.header-badge {
     background-color: #00bc6f; }
     .export-button:hover svg path {
       fill: white; }
+
+.footer h3 {
+  font-weight: 800;
+  font-size: 1.5em; }
+.footer .credits {
+  margin-top: 50px;
+  margin-bottom: 100px; }
+  .footer .credits img {
+    max-width: 350px; }
+.footer img.partner-logo {
+  height: 70px;
+  margin: 0 15px; }
+.footer .partners {
+  margin-bottom: 50px; }
 
 /*# sourceMappingURL=application.css.map */

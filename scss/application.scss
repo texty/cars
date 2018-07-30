@@ -17,6 +17,9 @@ body {
   color: $main-text;
 }
 
+h3 {
+  margin-top: 2em;
+}
 
 svg {
   text {
@@ -36,6 +39,7 @@ svg {
   }
 
   h3 {
+    margin-top: 0;
     font-weight: 800;
   }
 
@@ -86,5 +90,29 @@ h6.header-badge {
   }
 }
 
+.footer {
+  h3 {
+    font-weight: 800;
+    font-size: 1.5em;
+  }
+
+  .credits {
+    margin-top: 50px;
+    margin-bottom: 100px;
+    img {
+      max-width: 350px;
+    }
+  }
+
+
+  img.partner-logo {
+    height: 70px;
+    margin: 0 15px;
+  }
+
+  .partners {
+    margin-bottom: 50px;
+  }
+}
 
 
