@@ -4,7 +4,7 @@ var filter_chain = (function() {
         , query = []
 
         , on_change_counter = 0
-        , dispatcher = d3.dispatch("change")
+        , dispatcher = d3.dispatch("timeseries-change")
         ;
 
 
@@ -12,17 +12,33 @@ var filter_chain = (function() {
     function onChange(filter_position) {
         console.log("Filter " + filter_position + " changed!!!!!!!!!");
 
+        // Fetch new data for all subsequent filters (excluding current)
+        fetchNewDataAfterIndex(filter_position);
+
+        query = generateQueryForAllFilters();
+        
+        //call timeseries change
+        dispatcher.call("timeseries-change", this, query);
+    }
+
+    function fetchNewDataAfterIndex(filter_position) {
         filters.forEach(function(filter_object, index) {
-            if (index <= filter_position ) return;
+            if (index <= filter_position) return;
 
             var filters_for_query = filters.slice(0, index);
             filter_object.query = generateQuery(filters_for_query);
-
             filter_object.fetchNewData(filter_object.query);
         });
+    }
 
-        query = generateQueryForAllFilters();
-        dispatcher.call("change", this, query);
+    function fetchNewDataBetweenIndexes(start, end) {
+        filters.forEach(function(filter_object, index) {
+            if (index < start || index > end) return;
+
+            var filters_for_query = filters.slice(0, index);
+            filter_object.query = generateQuery(filters_for_query);
+            filter_object.fetchNewData(filter_object.query);
+        });
     }
 
     module.addFilter = function(filter_object) {
@@ -31,7 +47,10 @@ var filter_chain = (function() {
         filters.push(filter_object);
         filter_object.position = filters.length - 1;
 
-        filter_object.component.onChange(function(){return onChange(filter_object.position)});
+        filter_object.component.onChange(function(){
+            var current_position = filter_object.position;
+            return onChange(current_position)
+        });
 
         return module;
     };
@@ -43,13 +62,45 @@ var filter_chain = (function() {
             filter_object.position = index;
         });
 
+        //todo check this logic. fetch new data needed
+
+        return module;
+    };
+
+    module.reorder = function(old_index, new_index) {
+        if (!arguments.length) return;
+        if (old_index == new_index) return;
+
+        // perform a move
+        var old = filters[old_index];
+
+        var iterate_change = old_index < new_index ? +1 : -1;
+        for (var i = old_index; i !== new_index; i += iterate_change) {
+            filters[i] = filters[i + iterate_change];
+        }
+        filters[new_index] = old;
+
+        // also update position field
+        filters.forEach(function(filter_object, index) {filter_object.position = index});
+
+        // trigger filter data update (only for filter between old and new index)
+        var start, end;
+        if (old_index < new_index) {
+            start = old_index;
+            end = new_index;
+        } else {
+            start = new_index;
+            end = old_index;
+        }
+
+        fetchNewDataBetweenIndexes(start, end);
         return module;
     };
 
 
-    module.onChange = function(value) {
+    module.onTimeseriesChange = function(value) {
         if (!arguments.length) return module;
-        dispatcher.on("change." + ++on_change_counter, value);
+        dispatcher.on("timeseries-change." + ++on_change_counter, value);
         return module;
     };
     

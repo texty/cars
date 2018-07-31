@@ -54,7 +54,7 @@ badge_control.onChange(function(change) {
 filter_chain.triggerChange(-1);
 
 
-filter_chain.onChange(function(query) {
+filter_chain.onTimeseriesChange(function(query) {
     var region_query = query.filter(function(d){return d.field=="region"})[0];
     if (region_query && region_query.values && region_query.values.length)
         small_multiples_chart.filterRegions(region_query.values);
@@ -108,19 +108,41 @@ data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
     total_chart.update();
     small_multiples_chart.update();
     
+    //
+    // All is rendered for first time here
+
     d3.selectAll("svg.smallchart .axis--x .tick text")
         .filter(function(){return ["2017", "2018"].indexOf(this.innerHTML) >= 0})
-        .style("font-weight", "bold")
+        .style("font-weight", "bold");
+
+    var el = document.getElementById("filter_chain");
+    var sortable = Sortable.create(el, {
+        handle: '.handle',
+        animation: 50,
+        onUpdate: function(evt) {
+            console.log("update");
+            console.log(evt);
+            filter_chain.reorder(evt.oldIndex, evt.newIndex);
+        }
+    });
+
 });
 
 
 function addListControl(filter_chain, field, placeholder, getFieldData) {
-    var element = d3.select("#filter_chain")
+
+    var container = d3.select("#filter_chain")
         .append("div")
-        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3")
+        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3 chain_control");
+
+    var handle = container
+        .append("i")
+        .attr("class", "fas fa-grip-vertical handle")
+        .attr("title", "Тягніть щоб змінити порядок фільтрів");
+
+    var element = container
         .append("div")
-        .attr("id", field)
-        .attr("class", "chain_control");
+        .attr("id", field);
 
     var control = list_control()
         .id(field)
@@ -144,12 +166,18 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
 }
 
 function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData) {
-    var element = d3.select("#filter_chain")
+    var container = d3.select("#filter_chain")
         .append("div")
-        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3")
+        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3 chain_control");
+
+    var handle = container
+        .append("i")
+        .attr("class", "fas fa-grip-vertical handle")
+        .attr("title", "Тягніть щоб змінити порядок фільтрів");
+
+    var element = container
         .append("div")
-        .attr("id", field)
-        .attr("class", "chain_control");
+        .attr("id", field);
 
     var control = range_control()
         .id(field)

@@ -70,6 +70,7 @@ svg.smallchart {
 .list-control {
   width: 100%;
   border: 1px solid rgba(0, 188, 111, 0.125);
+  position: relative;
   /* to make scrollbars always visible */ }
   .list-control input.searchbox {
     width: 100%;
@@ -110,6 +111,8 @@ svg.smallchart {
     border-bottom: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 2px;
     padding: 12px 20px 12px 12px; }
+  .range-control .form-check-label {
+    margin-left: 1.25rem; }
   .range-control .control-content {
     height: 300px; }
   .range-control svg {
@@ -178,7 +181,17 @@ svg.smallchart {
       vertical-align: middle; }
 
 #filter_chain .chain_control {
-  margin-bottom: 2em; }
+  margin-bottom: 2em;
+  position: relative; }
+#filter_chain .handle {
+  position: absolute;
+  z-index: 90;
+  font-size: 1.5em;
+  right: 24px;
+  top: 14px;
+  color: #999;
+  cursor: move;
+  cursor: -webkit-grabbing; }
 
 #total_chart_legend {
   text-align: right; }

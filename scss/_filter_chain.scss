@@ -6,19 +6,21 @@
 
   .chain_control {
     margin-bottom: 2em;
+    position: relative;
   }
 
-  //.chain_control::after{
-  //  content: "->";
-  //  display: inline-block;
-  //  width: 10%;
-  //  left: 100%;
-  //  position: absolute;
-  //  top: 50%;
-  //  height: 1em;
-  //  background: red;
-  //  margin-left: -15px;
-  //  display: block;
-  //}
+  .handle {
+    position: absolute;
+    z-index: 90;
+
+    font-size: 1.5em;
+    right: 24px;
+    top: 14px;
+    color: #999;
+
+    cursor: move;
+    cursor: -webkit-grabbing;
+  }
+
 
 }

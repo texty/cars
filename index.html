@@ -14,6 +14,8 @@
     <link href='http://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
     <meta property="og:site_name" content="ТЕКСТИ.ORG.UA"/>
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="Перша реєстрація автомобілів в Україні"/>
@@ -57,6 +59,7 @@
                 <path d="M442,444.833V144.217c0-4.817-1.983-9.35-5.383-12.467L299.767,4.533C296.65,1.7,292.4,0,288.15,0H76.5    c-9.35,0-17,7.65-17,17v189.833c0,9.35,7.65,17,17,17s17-7.65,17-17V34h172.833v130.333c0,9.35,7.65,17,17,17h121.833    c0.85,0,1.983,0,2.833-0.283v246.783H93.5v-68c0-9.35-7.65-17-17-17s-17,7.65-17,17v85c0,9.35,7.65,17,17,17H425    C434.35,461.833,442,454.183,442,444.833z M300.333,51.567l102.85,95.767h-102.85V51.567z"/>
                 <path d="M19.833,280.5c0,9.35,7.65,17,17,17h177.083l-54.683,48.733c-7.083,6.233-7.65,17-1.417,24.083    c3.4,3.683,7.933,5.667,12.75,5.667c3.967,0,7.933-1.417,11.333-4.25l88.4-78.767c3.683-3.117,5.667-7.933,5.667-12.75    s-1.983-9.35-5.667-12.75L181.9,188.7c-7.083-6.233-17.85-5.667-24.083,1.417c-6.233,7.083-5.667,17.85,1.417,24.083l55.533,49.3    H36.833C27.483,263.5,19.833,271.15,19.833,280.5z"/>
                 </svg>
+                <span>Експорт</span>
             </button>
         </div>
 
@@ -75,7 +78,7 @@
     <div class="row">
         <div class="col-12">
             <h6 class="header-badge" style="margin-top: 50px;">Виберіть фільтр</h6>
-            <span style="color: #999">Графіки оновлюються при зміні фільтрів. Щоб порівнювати моделі між собою виберіть кілька моделей</span>
+            <span style="color: #999">Графіки оновлюються при зміні фільтрів. Щоб змінити порядок фільтрів тягніть за значок <i class="fas fa-grip-vertical handle"></i>.  Щоб порівнювати моделі між собою виберіть кілька моделей</span>
         </div>
     </div>
     <div class="row" id="filter_chain">
@@ -84,7 +87,7 @@
     <div class="row">
         <div class="col-12">
             <h6 class="header-badge" style="margin-top: 50px;">Активні фільтри</h6>
-            <span style="color: #999">Тут можна скинути попередні фільтри</span>
+            <span style="color: #999">Тут можна скинути попередньо встановлені фільтри</span>
         </div>
     </div>
 
@@ -159,7 +162,7 @@
 <script src="lib/moment.min.js"></script>
 <script src="lib/perfect-scrollbar.min.js"></script>
 <script src="lib/ion.rangeSlider.min.js"></script>
-
+<script src="lib/Sortable.js"></script>
 <script src="js/region_utils.js"></script>
 <script src="js/data_provider_utils.js"></script>
 <script src="js/api_data_provider.js"></script>
