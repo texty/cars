@@ -118,7 +118,7 @@ data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
     var el = document.getElementById("filter_chain");
     var sortable = Sortable.create(el, {
         handle: '.handle',
-        animation: 50,
+        animation: 0,
         onUpdate: function(evt) {
             console.log("update");
             console.log(evt);

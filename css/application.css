@@ -180,6 +180,8 @@ svg.smallchart {
       font-size: 1.5em;
       vertical-align: middle; }
 
+#filter_chain .sortable-chosen {
+  border: 3px solid #FAA12D; }
 #filter_chain .chain_control {
   margin-bottom: 2em;
   position: relative; }
