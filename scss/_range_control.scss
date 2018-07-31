@@ -15,14 +15,12 @@
     padding: 12px 20px 12px 12px;
   }
 
+  .form-check-label {
+    margin-left: 1.25rem;
+  }
+
   .control-content {
     height: 300px;
-
-
-
-
-
-
   }
 
 
@@ -61,7 +59,5 @@
       fill-opacity: 1;
       fill: $area_color;
     }
-
   }
-
 }
