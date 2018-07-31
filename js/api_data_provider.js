@@ -164,9 +164,11 @@ var data_provider = (function() {
                 var region = region_data.region.short_name;
 
                 var append_chunk = region_data.timeseries[0].values.map(function(row){
+                var monday_str = row.monday.toISOString().substr(0, 10);
                     return {
                         region: region,
-                        date: row.monday.toISOString().substr(0, 10),
+                        period_start: monday_str,
+                        period_end: addDays(monday_str, 6),
                         vehicles_registered: row.n
                     }
                 });
@@ -188,10 +190,12 @@ var data_provider = (function() {
 
                 region_data.timeseries.forEach(function(brand_data) {
                     var append_chunk = brand_data.values.map(function(row){
+                        var monday_str = row.monday.toISOString().substr(0, 10);
                         return {
                             region: region,
                             brand: brand_data.key,
-                            date: row.monday.toISOString().substr(0, 10),
+                            period_start: monday_str,
+                            period_end: addDays(monday_str, 6),
                             vehicles_registered: row.n
                         }
                     });

@@ -24,8 +24,6 @@ var field_names_dictionary = {
     total_weight: "Повна маса (кг)"
 };
 
-
-
 var total_chart = smallchart()
     .varName("n")
     .xTicks(10);
@@ -38,10 +36,6 @@ controls.region = addListControl(filter_chain, "region", "Введіть обл�
 controls.kind = addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
 controls.fuel = addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
 controls.brand = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(5);
-
-// addListControl(filter_chain, "producer", "Введіть марку", data_provider.getFieldData);
-// addListControl(filter_chain, "model", "Введіть модель", data_provider.getFieldData);
-
 controls.make_year = addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
 controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData);
 controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData);
@@ -55,7 +49,6 @@ d3.select("#badge_control").call(badge_control);
 
 badge_control.onChange(function(change) {
     controls[change.field].uncheck(change.value);
-    //todo for range controls
 });
 
 filter_chain.triggerChange(-1);
@@ -76,8 +69,6 @@ filter_chain.onChange(function(query) {
         data_provider.getTimeSeriesByQueryByRegionByBrand(query, function(err, data) {
             if (err) throw err;
 
-            console.log(data.by_region);
-
             var brands = brand_filter.values;
             total_chart_legend.data(brands).update();
 
@@ -90,10 +81,7 @@ filter_chain.onChange(function(query) {
 
     } else {
         data_provider.getTimeSeriesByQueryByRegion(query, function(err, data) {
-            console.log(arguments);
             if (err) throw err;
-
-            console.log(data.by_region);
 
             total_chart_legend.data([]).update();
 
@@ -152,7 +140,6 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
             });
         }
     });
-
     return control;
 }
 
@@ -199,17 +186,17 @@ function export_button_click(){
 
     if (brand_filter) {
         data_provider.getDataForExportWithBrand(query, function(err, export_data) {
-            csvContent += "date,region,brand,vehicles_registered\n" +
+            csvContent += "period_start,period_end,region,brand,vehicles_registered\n" +
             export_data.map(function(obj){
-                return [obj.date, obj.region, obj.brand, obj.vehicles_registered].join(",");
+                return [obj.period_start, obj.period_end, obj.region, obj.brand, obj.vehicles_registered].join(",");
             }).join("\n");
         });
         downloadCsvString(csvContent, "data.csv");
     } else {
         data_provider.getDataForExport(query, function(err, export_data) {
-            csvContent += "date,region,vehicles_registered\n" +
+            csvContent += "period_start,period_end,region,vehicles_registered\n" +
             export_data.map(function(obj){
-                return [obj.date, obj.region, obj.vehicles_registered].join(",");
+                return [obj.period_start, obj.period_end, obj.region, obj.vehicles_registered].join(",");
             }).join("\n");
         });
         downloadCsvString(csvContent, "data.csv");
