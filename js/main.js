@@ -58,7 +58,7 @@ all_possible_filters.forEach(function(filter){filter.label = filter_names_dictio
 
 var plus_button_control = addPlusButtonControl();
 
-['region', 'kind', 'brand', 'make_year'].map(function(id){
+['region', 'kind', 'brand'].map(function(id){
     return all_possible_filters.filter(function(f){return f.id === id})[0];
 }).forEach(function(filter) {controls[filter.id] = filter.generator()});
 
