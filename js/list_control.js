@@ -195,8 +195,13 @@ function list_control() {
         return str.trim().toUpperCase().replace(/\s+/g, " ");
     }
 
+    my.isInDefaultState = function() {
+        return my.selected().length == 0;
+    };
+    
+    my.type = function() {return "list"};
+    
     function noop(){}
-
 
     return my;
 }

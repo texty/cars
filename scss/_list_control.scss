@@ -10,6 +10,7 @@
   input.searchbox {
     width: 100%;
 
+
     box-sizing: border-box;
     border: none;
     border-bottom: 1px solid rgba($main_color, 0.125);
@@ -18,6 +19,7 @@
     //font-size: 16px;
     //background-color: white;
     padding: 12px 20px 12px 12px;
+    padding-left: 30px;
   }
 
   .list-group-item {

@@ -78,7 +78,8 @@ svg.smallchart {
     border: none;
     border-bottom: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 2px;
-    padding: 12px 20px 12px 12px; }
+    padding: 12px 20px 12px 12px;
+    padding-left: 30px; }
   .list-control .list-group-item {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
@@ -110,7 +111,8 @@ svg.smallchart {
     box-sizing: border-box;
     border-bottom: 1px solid rgba(0, 188, 111, 0.125);
     border-radius: 2px;
-    padding: 12px 20px 12px 12px; }
+    padding: 12px 20px 12px 12px;
+    padding-left: 30px; }
   .range-control .form-check-label {
     margin-left: 1.25rem; }
   .range-control .control-content {
@@ -189,11 +191,19 @@ svg.smallchart {
   position: absolute;
   z-index: 90;
   font-size: 1.5em;
-  right: 24px;
+  left: 20px;
   top: 14px;
   color: #999;
   cursor: move;
   cursor: -webkit-grabbing; }
+#filter_chain .remove {
+  position: absolute;
+  z-index: 90;
+  font-size: 1.5em;
+  right: 25px;
+  top: 14px;
+  color: #FAA12D;
+  cursor: pointer; }
 
 #total_chart_legend {
   text-align: right; }

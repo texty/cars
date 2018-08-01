@@ -18,12 +18,24 @@
     z-index: 90;
 
     font-size: 1.5em;
-    right: 24px;
+    left: 20px;
     top: 14px;
     color: #999;
 
     cursor: move;
     cursor: -webkit-grabbing;
+  }
+
+  .remove {
+    position: absolute;
+    z-index: 90;
+
+    font-size: 1.5em;
+    right: 25px;
+    top: 14px;
+    color: $orange;
+
+    cursor: pointer;
   }
 
 

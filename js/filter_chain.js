@@ -57,12 +57,20 @@ var filter_chain = (function() {
 
     module.removeFilter = function(idx) {
         if (!arguments.length) return;
+        
+        var this_filter = filters[idx];
+        
         filters.splice(idx, 1);
         filters.forEach(function(filter_object, index) {
             filter_object.position = index;
         });
-
-        //todo check this logic. fetch new data needed
+        
+        if (!this_filter.component.isInDefaultState()) {
+            fetchNewDataAfterIndex(idx - 1);
+            query = generateQueryForAllFilters();
+            //call timeseries change
+            dispatcher.call("timeseries-change", this, query);
+        }
 
         return module;
     };

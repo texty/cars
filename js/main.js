@@ -137,8 +137,21 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
 
     var handle = container
         .append("i")
-        .attr("class", "fas fa-grip-vertical handle")
+        .attr("class", "fas fa-arrows-alt handle")
         .attr("title", "Тягніть щоб змінити порядок фільтрів");
+
+    var remove = container
+        .append("i")
+        .attr("class", "fas fa-trash-alt remove")
+        .attr("title", "Видалити фільтр")
+        .on("click", function(){
+            var filter_position = $(".chain_control").index(container.node());
+            console.log(filter_position);
+
+            filter_chain.removeFilter(filter_position);
+            container.remove();
+            console.log("remove");
+        });
 
     var element = container
         .append("div")
@@ -159,6 +172,8 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
                 control
                     .items(data)
                     .update();
+
+                // badge_control.query(filter_chain.getCurrentQuery()).update();
             });
         }
     });
@@ -172,8 +187,23 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
 
     var handle = container
         .append("i")
-        .attr("class", "fas fa-grip-vertical handle")
+        .attr("class", "fas fa-arrows-alt handle")
         .attr("title", "Тягніть щоб змінити порядок фільтрів");
+
+    var remove = container
+        .append("i")
+        .attr("class", "fas fa-trash-alt remove")
+        .attr("title", "Видалити фільтр")
+        .on("click", function(){
+            var filter_position = $(".chain_control").index(container.node());
+            console.log(filter_position);
+
+            filter_chain.removeFilter(filter_position);
+            container.remove();
+            badge_control.query(filter_chain.getCurrentQuery()).update();
+
+            console.log("remove");
+        });
 
     var element = container
         .append("div")
@@ -197,6 +227,8 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
                     .empty_count(data.empty)
                     .total_count(data.total)
                     .update();
+
+                // badge_control.query(filter_chain.getCurrentQuery()).update();
             });
         }
     });

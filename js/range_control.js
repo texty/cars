@@ -188,6 +188,12 @@ function range_control() {
         dispatcher.on("change." + ++on_change_counter, value);
         return my;
     };
+    
+    my.isInDefaultState = function() {
+        return context.selectedExtent && context.selectedExtent.length ==0 && context.show_empty
+    };
+    
+    my.type = function() {return "range"};
 
     return my;
 }
