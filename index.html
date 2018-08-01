@@ -78,10 +78,23 @@
     <div class="row">
         <div class="col-12">
             <h6 class="header-badge" style="margin-top: 50px;">Виберіть фільтр</h6>
-            <span style="color: #999">Графіки оновлюються при зміні фільтрів. Щоб змінити порядок фільтрів тягніть за значок <i class="fas fa-arrows-alt handle"></i>.  Щоб порівнювати моделі між собою виберіть кілька моделей</span>
+            <span style="color: #999">Графіки оновлюються при зміні фільтрів. Щоб змінити порядок фільтрів тягніть за значок <i class="fas fa-arrows-alt handle"></i>. Додавайте нові фільтри за допомогою кнопки <i class="far fa-plus-square"></i>. Щоб порівнювати моделі між собою виберіть кілька моделей</span>
         </div>
     </div>
     <div class="row" id="filter_chain">
+        <!--<div class="plus-button-container col-12 col-sm-6 col-md-4 col-lg-3">-->
+            <!--<div class="plus-button d-flex h-100 justify-content-center">-->
+
+                <!--<div class="add-section">-->
+                    <!--<i class="far fa-plus-square align-self-center" title="Додати фільтр"></i>-->
+                <!--</div>-->
+                <!--<div class="select-section hidden">-->
+                    <!--<span class="placeholder">Оберіть тип фільтра</span>-->
+                <!--</div>-->
+
+
+            <!--</div>-->
+        <!--</div>-->
     </div>
 
     <div class="row">
@@ -100,12 +113,7 @@
     <div class="row">
         <div class="col-12">
             <h6 class="header-badge" style="margin-top: 50px;">Зареєстровано по областях</h6>
-            <div id="small_multiples">
-
-
-
-
-            </div>
+            <div id="small_multiples"></div>
         </div>
     </div>
 
@@ -170,6 +178,7 @@
 <script src="js/small_multiples.js"></script>
 <script src="js/list_control.js"></script>
 <script src="js/range_control.js"></script>
+<script src="js/add_filter_control.js"></script>
 <script src="js/filter_chain.js"></script>
 <script src="js/badges_control.js"></script>
 <script src="js/total_chart_legend.js"></script>

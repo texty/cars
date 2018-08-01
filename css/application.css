@@ -182,28 +182,77 @@ svg.smallchart {
       font-size: 1.5em;
       vertical-align: middle; }
 
-#filter_chain .sortable-chosen {
-  border: 3px solid #FAA12D; }
-#filter_chain .chain_control {
+#filter_chain {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
+  #filter_chain .sortable-chosen {
+    border: 3px solid #FAA12D; }
+  #filter_chain .chain_control {
+    margin-bottom: 2em;
+    position: relative; }
+  #filter_chain .handle {
+    position: absolute;
+    z-index: 90;
+    font-size: 1.5em;
+    left: 20px;
+    top: 14px;
+    color: #999;
+    cursor: move;
+    cursor: -webkit-grabbing; }
+  #filter_chain .remove {
+    position: absolute;
+    z-index: 90;
+    font-size: 1.5em;
+    right: 25px;
+    top: 14px;
+    color: #FAA12D;
+    cursor: pointer; }
+
+.plus-button-container {
   margin-bottom: 2em;
+  position: relative;
+  min-height: 348px; }
+  .plus-button-container span.placeholder {
+    display: inline-block;
+    color: grey;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 188, 111, 0.125);
+    border-radius: 2px;
+    padding: 12px 20px 12px 12px; }
+
+.plus-button {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(0, 188, 111, 0.125);
+  background-color: #F2F0F0;
   position: relative; }
-#filter_chain .handle {
-  position: absolute;
-  z-index: 90;
-  font-size: 1.5em;
-  left: 20px;
-  top: 14px;
-  color: #999;
-  cursor: move;
-  cursor: -webkit-grabbing; }
-#filter_chain .remove {
-  position: absolute;
-  z-index: 90;
-  font-size: 1.5em;
-  right: 25px;
-  top: 14px;
-  color: #FAA12D;
-  cursor: pointer; }
+  .plus-button i {
+    font-size: 10em;
+    color: white;
+    cursor: pointer; }
+    .plus-button i:hover {
+      color: rgba(0, 188, 111, 0.125); }
+  .plus-button .add-section {
+    display: inline-flex; }
+  .plus-button .select-section {
+    width: 100%; }
+  .plus-button .list-group-item {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    border: 1px solid rgba(0, 188, 111, 0.125);
+    border-radius: 0;
+    cursor: pointer; }
+    .plus-button .list-group-item:first-child {
+      border: none; }
+    .plus-button .list-group-item:hover {
+      color: white;
+      background-color: black; }
+  .plus-button .ul-container {
+    position: relative; }
 
 #total_chart_legend {
   text-align: right; }

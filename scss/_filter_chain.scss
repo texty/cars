@@ -1,8 +1,10 @@
 #filter_chain {
 
-  .plus-button {
-    //todo
-  }
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 
   .sortable-chosen {
     border: 3px solid $orange;
@@ -37,6 +39,75 @@
 
     cursor: pointer;
   }
+}
+
+.plus-button-container {
+  margin-bottom: 2em;
+  position: relative;
+  min-height: 348px;
+
+  span.placeholder {
+    display: inline-block;
+    color: grey;
+
+    width: 100%;
+
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba($main_color, 0.125);
+    border-radius: 2px;
+
+    padding: 12px 20px 12px 12px;
+  }
 
 
+}
+
+.plus-button {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba($main_color, 0.125);
+  background-color: #F2F0F0;
+
+  position: relative;
+
+  i {
+    font-size: 10em;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      color: rgba($main_color, 0.125);
+    }
+  }
+
+  .add-section {
+    display: inline-flex;
+  }
+
+  .select-section {
+    width: 100%;
+  }
+
+  .list-group-item {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+
+    border: 1px solid rgba($main_color, 0.125);
+    border-radius: 0;
+
+    cursor: pointer;
+
+    &:first-child {
+      border: none;
+    }
+
+    &:hover {
+      color: white;
+      background-color: black;
+    }
+  }
+
+  .ul-container {
+    //height: 300px;
+    position: relative;
+  }
 }

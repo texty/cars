@@ -116,6 +116,10 @@ var filter_chain = (function() {
         onChange(index);
         return module;  
     };
+    
+    module.filterCount = function(){
+        return filters.length;
+    };
 
     module.getCurrentQuery = function() {
         return generateQueryForAllFilters();

@@ -13,7 +13,7 @@ d3.timeFormatDefaultLocale({
     "shortMonths": ["січ", "лют", "бер", "кві", "тра", "чер", "лип", "сер", "вер", "жов", "лис", "гру"]
 });
 
-var field_names_dictionary = {
+var field_names_with_units_dictionary = {
     region: "Область",
     kind: "Тип",
     fuel: "Паливо",
@@ -24,6 +24,17 @@ var field_names_dictionary = {
     total_weight: "Повна маса (кг)"
 };
 
+var filter_names_dictionary = {
+    region: "Область",
+    kind: "Тип",
+    fuel: "Паливо",
+    brand: "Модель",
+    make_year: "Рік випуску",
+    color: "Колір",
+    capacity: "Об'єм",
+    total_weight: "Повна маса"
+};
+
 var total_chart = smallchart()
     .varName("n")
     .xTicks(10);
@@ -32,19 +43,29 @@ var small_multiples_chart = small_multiples();
 
 var controls = {};
 
-controls.region = addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData);
-controls.kind = addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData);
-controls.fuel = addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData);
-controls.brand = addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(5);
-controls.make_year = addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData);
-controls.capacity = addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData);
-controls.total_weight = addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData);
-controls.color = addListControl(filter_chain, "color", "Оберіть колір", data_provider.getFieldData);
+var all_possible_filters = [
+    {id: 'region', generator: function(){return addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData)}},
+    {id: 'kind', generator: function(){return addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData)}},
+    {id: 'fuel', generator: function(){return addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData)}},
+    {id: 'brand', generator: function(){return addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(5)}},
+    {id: 'make_year', generator: function(){return addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData)}},
+    {id: 'capacity', generator: function(){return addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData)}},
+    {id: 'total_weight', generator: function(){return addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData)}},
+    {id: 'color', generator: function(){return addListControl(filter_chain, "color", "Оберіть колір", data_provider.getFieldData)}}
+];
+
+all_possible_filters.forEach(function(filter){filter.label = filter_names_dictionary[filter.id]});
+
+var plus_button_control = addPlusButtonControl();
+
+['region', 'kind', 'brand', 'make_year'].map(function(id){
+    return all_possible_filters.filter(function(f){return f.id === id})[0];
+}).forEach(function(filter) {controls[filter.id] = filter.generator()});
 
 var badge_control = badges_control()
     .color_fields(["brand"])
     .display_value_dictionary({region: region_utils.REGION_SHORT_BY_CODE})
-    .field_name_dictionary(field_names_dictionary);
+    .field_name_dictionary(field_names_with_units_dictionary);
 d3.select("#badge_control").call(badge_control);
 
 badge_control.onChange(function(change) {
@@ -119,6 +140,8 @@ data_provider.getTimeSeriesByQueryByRegion([], function(err, data ){
     var sortable = Sortable.create(el, {
         handle: '.handle',
         animation: 0,
+        draggable: '.chain_control',
+
         onUpdate: function(evt) {
             console.log("update");
             console.log(evt);
@@ -135,6 +158,8 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
         .append("div")
         .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3 chain_control");
 
+    updatePlusButton();
+
     var handle = container
         .append("i")
         .attr("class", "fas fa-arrows-alt handle")
@@ -149,7 +174,10 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
             console.log(filter_position);
 
             filter_chain.removeFilter(filter_position);
+            delete controls[field];
             container.remove();
+            plus_button_control.items(getVacantFilters()).update();
+            updatePlusButton();
             console.log("remove");
         });
 
@@ -177,6 +205,9 @@ function addListControl(filter_chain, field, placeholder, getFieldData) {
             });
         }
     });
+
+    plus_button_control.items(getVacantFilters()).update();
+
     return control;
 }
 
@@ -184,6 +215,8 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
     var container = d3.select("#filter_chain")
         .append("div")
         .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3 chain_control");
+
+    updatePlusButton();
 
     var handle = container
         .append("i")
@@ -199,9 +232,11 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
             console.log(filter_position);
 
             filter_chain.removeFilter(filter_position);
+            delete controls[field];
             container.remove();
+            plus_button_control.items(getVacantFilters()).update();
             badge_control.query(filter_chain.getCurrentQuery()).update();
-
+            updatePlusButton();
             console.log("remove");
         });
 
@@ -233,9 +268,42 @@ function addRangeControl(filter_chain, field, placeholder, prefix, getFieldData)
         }
     });
 
+    plus_button_control.items(getVacantFilters()).update();
+
     return control;
 }
 
+function addPlusButtonControl() {
+    var element = d3.select("#filter_chain")
+        .append("div")
+        .attr("class", "col-12 col-sm-6 col-md-4 col-lg-3 plus-button-container");
+
+    var control = add_filter_control()
+        .placeholder("Оберіть тип нового фільтра")
+        .items(getVacantFilters());
+
+    control.onFilterSelected(function(filter_selected) {
+        console.log(filter_selected);
+        var new_filter = all_possible_filters.filter(function(f){return f.id === filter_selected.id})[0];
+        controls[new_filter.id] = new_filter.generator();
+        filter_chain.triggerChange(filter_chain.filterCount() - 2);
+        plus_button_control.items(getVacantFilters()).update();
+    });
+
+    element.call(control);
+
+    return control;
+}
+
+function getVacantFilters() {
+    var visible_filters = Object.keys(controls);
+
+    var vacant = all_possible_filters.filter(function(filter){
+        return visible_filters.indexOf(filter.id) < 0
+    });
+
+    return vacant;
+}
 
 function export_button_click(){
     
@@ -272,4 +340,12 @@ function downloadCsvString(csvContent, filename) {
     document.body.appendChild(link); // Required for FF
     link.style.visibility = 'hidden';
     link.click();
+}
+
+function updatePlusButton() {
+    var plus_button = d3.select("#filter_chain .plus-button-container");
+    plus_button.raise();
+
+    var plus_button_position = $("#filter_chain").find("> div").index(plus_button.node());
+    plus_button.classed("hidden", plus_button_position > 7);
 }
