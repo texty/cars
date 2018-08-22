@@ -5,7 +5,7 @@ var data_provider = (function() {
     // const API_HOST = "http://api-x32.texty.org.ua";
 
     // Повинні бути понеділками!!!!
-    const dates_extent = ['2016-12-26', '2018-03-05'];
+    const dates_extent = ['2012-12-31', '2018-07-30'];
     const all_possible_mondays = datesInRange(dates_extent[0], dates_extent[1]);
 
 
