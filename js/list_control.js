@@ -128,7 +128,7 @@ function list_control() {
 
                 if (context.order) item_merged_selection.order();
                 
-                ps.update();
+                setTimeout(function(){ps.update()}, 10);
 
                 return my;
             }
