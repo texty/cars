@@ -164,8 +164,7 @@ var data_provider = (function() {
                 var month_str = row.month.toISOString().substr(0, 10);
                     return {
                         region: region,
-                        period_start: month_str,
-                        period_end: addDays(month_str, 6),
+                        month: month_str,
                         vehicles_registered: row.n
                     }
                 });
@@ -191,8 +190,7 @@ var data_provider = (function() {
                         return {
                             region: region,
                             brand: brand_data.key,
-                            period_start: month_str,
-                            period_end: addDays(month_str, 6),
+                            month: month_str,
                             vehicles_registered: row.n
                         }
                     });
