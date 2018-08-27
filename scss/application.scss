@@ -27,6 +27,16 @@ svg {
   }
 }
 
+a.dotted {
+  border-bottom: 1px dotted;
+  color: #5893fa;
+
+  &:hover {
+    text-decoration: none;
+    color: $orange;
+  }
+}
+
 .header-block {
   color: white;
   background-color: $main_color;
@@ -44,6 +54,10 @@ svg {
   }
 
   margin-bottom: 5em;
+
+  a.dotted {
+    color: #afd2fa;
+  }
 }
 
 h6.header-badge {

@@ -275,6 +275,13 @@ h3 {
 svg text {
   fill: #424242; }
 
+a.dotted {
+  border-bottom: 1px dotted;
+  color: #5893fa; }
+  a.dotted:hover {
+    text-decoration: none;
+    color: #FAA12D; }
+
 .header-block {
   color: white;
   background-color: #007852;
@@ -286,6 +293,8 @@ svg text {
   .header-block h3 {
     margin-top: 0;
     font-weight: 800; }
+  .header-block a.dotted {
+    color: #afd2fa; }
 
 h6.header-badge {
   display: inline-block;
