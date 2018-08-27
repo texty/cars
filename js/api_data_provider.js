@@ -4,18 +4,15 @@ var data_provider = (function() {
     const API_HOST = "http://localhost:5000";
     // const API_HOST = "http://api-x32.texty.org.ua";
 
-    // Повинні бути понеділками!!!!
-    const dates_extent = ['2012-12-31', '2018-07-30'];
-    const all_possible_mondays = datesInRange(dates_extent[0], dates_extent[1]);
-
-
-    // const dates_extent = ['2017-01-03', '2018-03-06'];
+    // Повинні бути початком місяця!!!!
+    const dates_extent = ['2013-01-01', '2018-07-01'];
+    const all_possible_months = monthsInRange(dates_extent[0], dates_extent[1]);
+    
 
     Object.keys(region_utils.REGION_BY_CODE).forEach(function(code) {
         var val = region_utils.REGION_BY_CODE[code];
         val.short_name = val.name.replace(" область", "");
     });
-
 
 
     var getFieldData_xhr = {};
@@ -164,11 +161,11 @@ var data_provider = (function() {
                 var region = region_data.region.short_name;
 
                 var append_chunk = region_data.timeseries[0].values.map(function(row){
-                var monday_str = row.monday.toISOString().substr(0, 10);
+                var month_str = row.month.toISOString().substr(0, 10);
                     return {
                         region: region,
-                        period_start: monday_str,
-                        period_end: addDays(monday_str, 6),
+                        period_start: month_str,
+                        period_end: addDays(month_str, 6),
                         vehicles_registered: row.n
                     }
                 });
@@ -190,12 +187,12 @@ var data_provider = (function() {
 
                 region_data.timeseries.forEach(function(brand_data) {
                     var append_chunk = brand_data.values.map(function(row){
-                        var monday_str = row.monday.toISOString().substr(0, 10);
+                        var month_str = row.month.toISOString().substr(0, 10);
                         return {
                             region: region,
                             brand: brand_data.key,
-                            period_start: monday_str,
-                            period_end: addDays(monday_str, 6),
+                            period_start: month_str,
+                            period_end: addDays(month_str, 6),
                             vehicles_registered: row.n
                         }
                     });
@@ -233,7 +230,7 @@ var data_provider = (function() {
 
     function sumFunction(first, rest) {
         return {
-            monday: first.monday,
+            month: first.month,
             n: first.n + d3.sum(rest, function(d){return d.n})
         }
     }
@@ -250,7 +247,7 @@ var data_provider = (function() {
                 };
 
                 region_data.value.forEach(function(row){
-                    row.monday = new Date(row.monday);
+                    row.month = new Date(row.month);
                 });
 
                 by_region.push(region_data);
@@ -261,7 +258,7 @@ var data_provider = (function() {
     function mapTimeseriesToObject(timeseries) {
         return timeseries.map(function(n,i){
             return {
-                monday: new Date(all_possible_mondays[i]),
+                month: new Date(all_possible_months[i]),
                 n: n
             }
         })
@@ -269,7 +266,7 @@ var data_provider = (function() {
 
     function fillWithZeros(ordered_data, varName, step) {
         var extent = d3.extent(ordered_data, function(d){return d[varName]});
-// debugger;
+
         var repaired = [];
         var idx = 0;
 

@@ -50,17 +50,17 @@ function smallchart() {
                 .range([height, 0]);
 
             var line = d3.line()
-                .x(function(d) { return x(d.monday)})
+                .x(function(d) { return x(d.month)})
                 .y(function(d) { return y(d[varName])})
-                .curve(d3.curveLinear);
+                .curve(d3.curveStepAfter);
 
             var area = d3.area()
-                .x(function(d) {return x(d.monday)})
+                .x(function(d) {return x(d.month)})
                 .y0(y(0))
                 .y1(function(d) {return y(d[varName])})
                 .curve(d3.curveStepAfter);
             
-            x.domain(d3.extent(data[0].values, function(d) {return d.monday}));
+            x.domain(d3.extent(data[0].values, function(d) {return d.month}));
 
             if (!minY) minY = 0;
             if (!maxY) maxY = d3.max(data, function(obj) {return d3.max(obj.values, access)});
