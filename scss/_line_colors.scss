@@ -23,6 +23,16 @@
   background-color: #FFD800 !important;
 }
 
+.line-chart-color-6 {
+  stroke: #424242;
+  background-color: #424242 !important;
+}
+
+.line-chart-color-7 {
+  stroke: #53ffdd;
+  background-color: #53ffdd !important;
+}
+
 
 .order-colored-items {
   :nth-child(1) {
@@ -48,5 +58,15 @@
   :nth-child(5) {
     stroke: #FFD800 !important;
     background-color: #FFD800 !important;
+  }
+
+  :nth-child(6) {
+    stroke: #424242 !important;
+    background-color: #424242 !important;
+  }
+
+  :nth-child(7) {
+    stroke: #53ffdd !important;
+    background-color: #53ffdd !important;
   }
 }

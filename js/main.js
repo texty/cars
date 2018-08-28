@@ -47,7 +47,7 @@ var all_possible_filters = [
     {id: 'region', generator: function(){return addListControl(filter_chain, "region", "Введіть область", data_provider.getRegionsData)}},
     {id: 'kind', generator: function(){return addListControl(filter_chain, "kind", "Введіть тип", data_provider.getFieldData)}},
     {id: 'fuel', generator: function(){return addListControl(filter_chain, "fuel", "Оберіть тип палива", data_provider.getFieldData)}},
-    {id: 'brand', generator: function(){return addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(5)}},
+    {id: 'brand', generator: function(){return addListControl(filter_chain, "brand", "Оберіть марку/модель", data_provider.getFieldData).max_selected(7)}},
     {id: 'make_year', generator: function(){return addListControl(filter_chain, "make_year", "Введіть рік випуску", data_provider.getFieldData)}},
     {id: 'capacity', generator: function(){return addRangeControl(filter_chain, "capacity", "Оберіть об'єм двигуна", "см³",  data_provider.getExtentData)}},
     {id: 'total_weight', generator: function(){return addRangeControl(filter_chain, "total_weight", "Повна маса", "кг", data_provider.getExtentData)}},
