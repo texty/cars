@@ -314,17 +314,17 @@ function export_button_click(){
 
     if (brand_filter) {
         data_provider.getDataForExportWithBrand(query, function(err, export_data) {
-            csvContent += "period_start,period_end,region,brand,vehicles_registered\n" +
+            csvContent += "month,region,brand,vehicles_registered\n" +
             export_data.map(function(obj){
-                return [obj.period_start, obj.period_end, obj.region, obj.brand, obj.vehicles_registered].join(",");
+                return [obj.month, obj.region, obj.brand, obj.vehicles_registered].join(",");
             }).join("\n");
         });
         downloadCsvString(csvContent, "data.csv");
     } else {
         data_provider.getDataForExport(query, function(err, export_data) {
-            csvContent += "period_start,period_end,region,vehicles_registered\n" +
+            csvContent += "month,region,vehicles_registered\n" +
             export_data.map(function(obj){
-                return [obj.period_start, obj.period_end, obj.region, obj.vehicles_registered].join(",");
+                return [obj.month, obj.region, obj.vehicles_registered].join(",");
             }).join("\n");
         });
         downloadCsvString(csvContent, "data.csv");
