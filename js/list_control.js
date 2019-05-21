@@ -31,6 +31,7 @@ function list_control() {
                 .attr("type", "text")
                 .attr("name", "search")
                 .attr("class", "searchbox")
+                .attr("autocomplete", "off")
                 .attr("placeholder", context.placeholder);
 
             var ul_container = container
