@@ -1,7 +1,7 @@
 var data_provider = (function() {
     var module = {};
     
-    const API_HOST = "https://localhost:5000/cars";
+    const API_HOST = "http://localhost:5000/cars";
     // const API_HOST = "https://api-x32.texty.org.ua/cars";
 
     // Повинні бути початком місяця!!!!
