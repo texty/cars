@@ -319,7 +319,7 @@ function export_button_click(){
                 return [obj.month, obj.region, obj.brand, obj.vehicles_registered].join(",");
             }).join("\n");
         });
-        downloadCsvString(csvContent, "data.csv");
+        downloadString(csvContent, "data.csv");
     } else {
         data_provider.getDataForExport(query, function(err, export_data) {
             csvContent += "month,region,vehicles_registered\n" +
@@ -327,11 +327,79 @@ function export_button_click(){
                 return [obj.month, obj.region, obj.vehicles_registered].join(",");
             }).join("\n");
         });
-        downloadCsvString(csvContent, "data.csv");
+        downloadString(csvContent, "data.csv");
     }
 }
 
-function downloadCsvString(csvContent, filename) {
+function export_button_xlsx_click(){
+
+    var query = filter_chain.getCurrentQuery();
+    var brand_filter = query.filter(function(f){return f.field === "brand"})[0];
+
+    var table = d3.select("#export_table");
+    table.selectAll("*").remove();
+
+    var th = table.append("thead")
+        .append("tr")
+        .selectAll("th");
+
+    var tbody = table.append("tbody");
+
+    if (brand_filter) {
+        th
+            .data(["month", "region", "brand", "vehicles_registered"])
+            .enter()
+            .append("th")
+            .text(function(d) {return d});
+
+        data_provider.getDataForExportWithBrand(query, function(err, export_data) {
+            var rows_data = export_data.map(function(obj){
+                return [obj.month, obj.region, obj.brand, obj.vehicles_registered];
+            });
+
+            tbody
+                .selectAll("tr")
+                .data(rows_data)
+                .enter()
+                .append("tr")
+                .selectAll("td")
+                .data(function(d) {return d})
+                .enter()
+                .append("td")
+                .text(function(dd){return dd})
+
+            downloadString(tableToExcel("export_table", "export"), "export.xlsx");
+        });
+
+    } else {
+        th
+            .data(["month", "region", "vehicles_registered"])
+            .enter()
+            .append("th")
+            .text(function(d) {return d});
+
+        data_provider.getDataForExport(query, function(err, export_data) {
+            var rows_data = export_data.map(function(obj) {
+                return [obj.month, obj.region, obj.vehicles_registered]
+            });
+
+            tbody
+                .selectAll("tr")
+                .data(rows_data)
+                .enter()
+                .append("tr")
+                .selectAll("td")
+                .data(function(d) {return d})
+                .enter()
+                .append("td")
+                .text(function(dd){return dd})
+
+            downloadString(tableToExcel("export_table", "export"), "export.xlsx");
+        });
+    }
+}
+
+function downloadString(csvContent, filename) {
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
