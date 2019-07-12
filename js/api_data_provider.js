@@ -1,11 +1,11 @@
 var data_provider = (function() {
     var module = {};
     
-    const API_HOST = "https://localhost:5000/cars";
+    const API_HOST = "http://localhost:5000/cars";
     // const API_HOST = "https://api-x32.texty.org.ua/cars";
 
     // Повинні бути початком місяця!!!!
-    const dates_extent = ['2013-01-01', '2019-03-01'];
+    const dates_extent = ['2013-01-01', '2019-05-01'];
     const all_possible_months = monthsInRange(dates_extent[0], dates_extent[1]);
     
 
