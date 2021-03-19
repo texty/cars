@@ -5,7 +5,7 @@ var data_provider = (function() {
     // const API_HOST = "https://api-x32.texty.org.ua/cars";
 
     // Повинні бути початком місяця!!!!
-    const dates_extent = ['2013-01-01', '2019-10-01'];
+    const dates_extent = ['2013-01-01', '2021-02-01'];
     const all_possible_months = monthsInRange(dates_extent[0], dates_extent[1]);
     
 
